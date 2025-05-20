@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS assets;
-DROP TABLE IF EXISTS attendance;
-DROP TABLE IF EXISTS employees;
-
 CREATE TABLE IF NOT EXISTS employees (
     emp_id VARCHAR(7) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,

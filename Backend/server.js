@@ -9,7 +9,7 @@ const cors = require('cors'); // Add CORS package
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3019;
 
 // Logger setup
 const logger = winston.createLogger({
@@ -27,16 +27,16 @@ const logger = winston.createLogger({
 // PostgreSQL connection
 const pool = new Pool({
    user: process.env.DB_USER || 'postgres',
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || 'postgres',
     database: process.env.DB_NAME || 'attendance_db',
-    password: process.env.DB_PASSWORD || 'Password@12345',
+    password: process.env.DB_PASSWORD || 'admin123',
     port: process.env.DB_PORT || 5432,
 });
 
 // Middleware
 app.use(cors());
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:5501'],
+    origin: ['http://54.166.206.245:3018, 'http://127.0.0.1:5501'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type']
 }));
@@ -266,9 +266,9 @@ pool.connect()
         initializeDatabase().then(() => {
            app.listen(port, '0.0.0.0', () => {
                 logger.info(`Server running on port ${port}`);
-                console.log(`Health check: http://localhost:${port}/health`);
-                console.log(`HR Dashboard: http://localhost:${port}/attendance.html`);
-                console.log(`Employee Asset Request: http://localhost:${port}/employee.html`);
+                console.log(`Health check: http://54.166.206.245:${port}/health`);
+                console.log(`HR Dashboard: http://54.166.206.245:${port}/attendance.html`);
+                console.log(`Employee Asset Request: http://54.166.206.245:${port}/employee.html`);
             });
         });
     })
