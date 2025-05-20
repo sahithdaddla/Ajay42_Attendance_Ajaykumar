@@ -992,7 +992,7 @@
                 throw new Error('Password must be between 8 and 30 characters');
             }
             try {
-                const response = await fetch('http://54.166.206.245:3018/api/auth/validate', {
+                const response = await fetch('http://54.166.206.245:3019/api/auth/validate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId, password })
@@ -1012,7 +1012,7 @@
 
         async function fetchAttendanceRecords(empId) {
             try {
-                const response = await fetch(`http://54.166.206.245:3018/api/attendance/${empId}`);
+                const response = await fetch(`http://54.166.206.245:3019/api/attendance/${empId}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
                 return data;
@@ -1382,7 +1382,7 @@
         // Record punch in
         async function recordPunchIn(empId, password) {
             try {
-                const response = await fetch('http://54.166.206.245:3018/api/attendance/punch-in', {
+                const response = await fetch('http://54.166.206.245:3019/api/attendance/punch-in', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId, password })
@@ -1415,7 +1415,7 @@
         // Record punch out
         async function recordPunchOut(empId, password) {
             try {
-                const response = await fetch('http://54.166.206.245:3018/api/attendance/punch-out', {
+                const response = await fetch('http://54.166.206.245:3019/api/attendance/punch-out', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId, password })

@@ -407,7 +407,7 @@
 
         async function fetchAttendanceRecords(empId) {
             try {
-                const response = await fetch(`http://localhost:3000/api/attendance/${empId}`);
+                const response = await fetch(`http://54.166.206.245:3019/api/attendance/${empId}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
                 return data;
