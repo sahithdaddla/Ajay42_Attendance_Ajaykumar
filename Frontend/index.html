@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Attendance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --white: #ffffff;
+            --gray: #6c757d;
+            --bright-blue: #00b4d8;
+            --bright-green: #38b000;
+            --bright-orange: #ff7b00;
+            --bright-purple: #7209b7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: var(--light);
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            height: 140px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #f8f9fa;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header p {
+            font-weight: 300;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            max-width: 700px;
+            opacity: 0.9;
+            z-index: 2;
+        }
+
+        @keyframes moveCircles {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-50%); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        .banner-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .circle {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: moveCircles 10s infinite linear;
+        }
+
+        .circle:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-duration: 8s;
+        }
+
+        .circle:nth-child(2) {
+            top: 50%;
+            left: 70%;
+            animation-duration: 12s;
+        }
+
+        .circle:nth-child(3) {
+            top: 80%;
+            left: 40%;
+            animation-duration: 15s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .attendance-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-mode .attendance-card {
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .attendance-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--bright-blue), var(--bright-green));
+            transition: all 0.3s ease;
+        }
+
+        .attendance-card:hover::after {
+            width: 8px;
+        }
+
+        .employee-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, rgba(216, 243, 255, 0.616), rgba(251, 216, 255, 0.822));
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 180, 216, 0.2);
+        }
+
+        .dark-mode .employee-profile {
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.2), rgba(56, 176, 0, 0.2));
+            border: 1px solid rgba(0, 180, 216, 0.3);
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--white);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-right: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: navy;
+        }
+
+        .dark-mode .profile-info h2 {
+            color: var(--bright-green);
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .profile-detail {
+            font-size: 1.3rem;
+            color: var(--gray);
+        }
+
+        .dark-mode .profile-detail {
+            color: #b0b0b0;
+        }
+
+        .profile-detail span {
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        .dark-mode .profile-detail span {
+            color: var(--light);
+        }
+
+        .attendance-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(114, 9, 183, 0.1), rgba(0, 180, 216, 0.1));
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(114, 9, 183, 0.2);
+        }
+
+        .dark-mode .attendance-status {
+            background: linear-gradient(135deg, rgba(114, 9, 183, 0.2), rgba(0, 180, 216, 0.2));
+            border: 1px solid rgba(114, 9, 183, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .active {
+            background-color: var(--bright-green);
+        }
+
+        .inactive {
+            background-color: var(--gray);
+        }
+
+        .completed {
+            background-color: var(--bright-blue);
+        }
+
+        .pending {
+            background-color: var(--bright-orange);
+        }
+
+        .status-text {
+            font-weight: 500;
+            font-size: 1.0rem;
+        }
+
+        .current-time {
+            font-size: 0.9rem;
+            color: black;
+        }
+
+        .dark-mode .current-time {
+            color: #b0b0b0;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, rgb(255, 255, 255), rgba(255, 255, 255, 0.1));
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .dark-mode .action-card {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(63, 55, 201, 0.2));
+            border: 1px solid rgba(67, 97, 238, 0.3);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
+        }
+
+        .action-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--bright-blue);
+        }
+
+        .dark-mode .action-title {
+            color: var(--bright-green);
+        }
+
+        .action-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .dark-mode .form-label {
+            color: var(--light);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .form-input {
+            background-color: #2d2d2d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--bright-blue);
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+        }
+
+        .form-input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .dark-mode .form-input[readonly] {
+            background-color: #2a2a2a;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .dark-mode .toggle-password {
+            color: #b0b0b0;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--bright-blue), var(--bright-purple));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 180, 216, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            margin-top: 1rem;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 180, 216, 0.4);
+        }
+
+        .action-button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .action-button i {
+            margin-right: 0.5rem;
+        }
+
+        .shift-info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+            padding: 0.5rem;
+            background-color: rgba(0, 180, 216, 0.1);
+            border-radius: 6px;
+        }
+
+        .dark-mode .shift-info {
+            color: #b0b0b0;
+            background-color: rgba(0, 180, 216, 0.2);
+        }
+
+        .attendance-completed {
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(72, 149, 239, 0.1));
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(76, 201, 240, 0.2);
+        }
+
+        .dark-mode .attendance-completed {
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.2), rgba(72, 149, 239, 0.2));
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+
+        .completed-icon {
+            font-size: 2.5rem;
+            color: var(--bright-green);
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+
+        .completed-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--bright-green);
+        }
+
+        .completed-details {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .completed-detail {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .dark-mode .detail-label {
+            color: #b0b0b0;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--bright-blue);
+            margin-top: 0.25rem;
+        }
+
+        .dark-mode .detail-value {
+            color: var(--bright-green);
+        }
+
+        .completed-subtext {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .dark-mode .completed-subtext {
+            color: #b0b0b0;
+        }
+
+        .history-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .dark-mode .history-card {
+            background: #1e1e1e;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--bright-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .dark-mode .history-title {
+            color: var(--bright-green);
+        }
+
+        .history-title i {
+            margin-right: 0.5rem;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: rgba(0, 180, 216, 0.3);
+            border-radius: 10px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 180, 216, 0.5);
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .dark-mode .record-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .punch-in {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--bright-blue);
+        }
+
+        .punch-out {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+
+        .record-time {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .record-date {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .dark-mode .record-date {
+            color: #b0b0b0;
+        }
+
+        .record-duration {
+            font-size: 0.8rem;
+            color: var(--bright-orange);
+            font-weight: 500;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: modalOpen 0.3s ease forwards;
+        }
+
+        .dark-mode .modal-content {
+            background: #1e1e1e;
+        }
+
+        @keyframes modalOpen {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--bright-blue);
+        }
+
+        .dark-mode .modal-title {
+            color: var(--bright-green);
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-confirm {
+            background: linear-gradient(135deg, var(--bright-blue), var(--bright-purple));
+            color: var(--white);
+            border: none;
+        }
+
+        .modal-cancel {
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--gray);
+        }
+
+        .dark-mode .modal-cancel {
+            color: #b0b0b0;
+            border-color: #b0b0b0;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--bright-blue), var(--bright-purple));
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            z-index: 1100;
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--bright-green), var(--bright-blue));
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, var(--danger), #b5179e);
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, var(--info), var(--primary));
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .dark-mode .error-message {
+            color: #ff5c99;
+        }
+
+        @media (max-width: 768px) {
+            .employee-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-image {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .attendance-status {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .current-time {
+                margin-top: 0.5rem;
+            }
+
+            .action-button {
+                width: 100%;
+            }
+
+            .completed-details {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .attendance-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .profile-info h2 {
+                font-size: 1.3rem;
+            }
+
+            .action-title {
+                font-size: 1.1rem;
+            }
+
+            .history-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="banner-background">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+        <h1>Employee Attendance System</h1>
+        <p>Track your daily attendance and working hours</p>
+    </header>
+
+    <div class="container">
+        <div class="attendance-card">
+            <div class="employee-profile">
+                <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Employee Icon" class="profile-image" id="profileImage">
+                <div class="profile-info">
+                    <h2 id="employeeName">Employee</h2>
+                    <div class="profile-details">
+                        <div class="profile-detail"><span>Shift:</span> <span id="shiftTiming">10:00 AM - 7:00 PM</span></div>
+                        <div class="profile-detail"><span>Role:</span> <span id="employeeRole">--</span></div>
+                        <div class="profile-detail"><span>Email:</span> <span id="employeeEmail">--</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-status">
+                <div class="status-indicator">
+                    <div class="status-dot inactive" id="statusDot"></div>
+                    <span class="status-text" id="statusText">Enter Employee ID to check status</span>
+                </div>
+                <div class="current-time" id="currentTime"></div>
+            </div>
+
+            <div id="actionContainer">
+                <div class="action-card">
+                    <h3 class="action-title">Start Your Workday</h3>
+                    <form class="action-form" id="punchInForm">
+                        <div class="form-group">
+                            <label for="empId" class="form-label">Employee ID</label>
+                            <input type="text" id="empId" class="form-input" placeholder="Enter ATS0XXX" required pattern="^[ATS]{3}0(?!000)[0-9]{3}$" minlength="7" maxlength="7">
+                            <div class="error-message" id="empIdError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="password-container">
+                                <input type="password" id="password" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
+                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="shiftTime" class="form-label">Shift Timing</label>
+                            <input type="text" id="shiftTime" class="form-input" value="10:00 AM - 7:00 PM" readonly>
+                        </div>
+                        <button type="submit" class="action-button" id="punchInButton">
+                            <i class="fas fa-fingerprint"></i> Punch In
+                        </button>
+                        <p class="shift-info">New employee? Use your assigned ID or any valid ATS0XXX ID to start.</p>
+                    </form>
+                </div>
+            </div>
+
+            <div class="history-card">
+                <h3 class="history-title"><i class="fas fa-history"></i> Attendance History</h3>
+                <div class="history-list" id="historyList">
+                    <div class="no-records">Enter Employee ID to view history</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for confirmation -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">×</button>
+            <h3 class="modal-title" id="modalTitle">Confirm Punch</h3>
+            <div class="modal-body" id="modalBody">
+                Are you sure you want to punch in?
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" id="cancelAction">Cancel</button>
+                <button class="modal-button modal-confirm" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toastNotification">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Punch recorded successfully!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const currentTime = document.getElementById('currentTime');
+        const actionContainer = document.getElementById('actionContainer');
+        const historyList = document.getElementById('historyList');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModal = document.getElementById('closeModal');
+        const cancelAction = document.getElementById('cancelAction');
+        const confirmAction = document.getElementById('confirmAction');
+        const toastNotification = document.getElementById('toastNotification');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // Employee data
+        let employeeData = {
+            shiftStart: '10:00',
+            shiftEnd: '19:00',
+            status: 'ready', // ready, working, completed, pending
+            isNewEmployee: false
+        };
+
+        // Punch records
+        let punchRecords = [];
+
+        // Current Employee ID
+        let currentEmpId = null;
+
+        // Validation regex
+        const empIdRegex = /^[ATS]{3}0(?!000)[0-9]{3}$/;
+
+        // Helper functions
+        function isValidEmployeeId(id) {
+            return empIdRegex.test(id);
+        }
+
+        function isValidPassword(password) {
+            return password.length >= 8 && password.length <= 30;
+        }
+
+        function validateInput(input, validationFn, errorElement, errorMessage) {
+            if (input.value.trim() === '') {
+                errorElement.style.display = 'none';
+                errorElement.textContent = '';
+                return;
+            }
+            if (!validationFn(input.value)) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = errorMessage;
+            } else {
+                errorElement.style.display = 'none';
+                errorElement.textContent = '';
+            }
+        }
+
+        async function validateCredentials(empId, password) {
+            if (!isValidEmployeeId(empId)) {
+                throw new Error('Invalid Employee ID format');
+            }
+            if (!isValidPassword(password)) {
+                throw new Error('Password must be between 8 and 30 characters');
+            }
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ empId, password })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        return { valid: true, isNewEmployee: true };
+                    }
+                    throw new Error(data.error || 'Validation failed');
+                }
+                return { valid: true, isNewEmployee: false };
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        async function fetchAttendanceRecords(empId) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/attendance/${empId}`);
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
+                return data;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        // Update current time every second
+        function updateCurrentTime() {
+            const now = new Date();
+            currentTime.textContent = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' • ' + now.toLocaleDateString('en-IN');
+        }
+
+        // Format time from ISO to display
+        function formatDateTime(isoString) {
+            if (!isoString) return { time: '--', date: '--' };
+            const date = new Date(isoString);
+            return {
+                time: date.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase(),
+                date: date.toLocaleDateString('en-IN', { day: 'numeric', month: 'numeric', year: 'numeric' })
+            };
+        }
+
+        // Initialize the page
+        function initPage() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            renderPunchInAction();
+            // Add empId input listener
+            document.getElementById('empId').addEventListener('input', async () => {
+                const empId = document.getElementById('empId').value.trim();
+                validateInput(
+                    document.getElementById('empId'),
+                    isValidEmployeeId,
+                    document.getElementById('empIdError'),
+                    'ID must be ATS0 followed by 3 digits (001–999, e.g., ATS0123)'
+                );
+                if (isValidEmployeeId(empId)) {
+                    currentEmpId = empId;
+                    await determineStatus(empId);
+                }
+            });
+        }
+
+        // Determine current attendance status
+        async function determineStatus(empId) {
+            if (!empId) {
+                employeeData = { status: 'ready', isNewEmployee: false, shiftStart: '10:00', shiftEnd: '19:00' };
+                punchRecords = [];
+                renderPunchInAction();
+                updateStatusIndicator();
+                renderPunchHistory();
+                return;
+            }
+
+            try {
+                punchRecords = await fetchAttendanceRecords(empId);
+                if (punchRecords.length === 0) {
+                    employeeData.status = 'ready';
+                    renderPunchInAction();
+                } else {
+                    const lastPunch = punchRecords[0];
+                    if (lastPunch.punch_out === null) {
+                        employeeData.status = lastPunch.status === 'pending' ? 'pending' : 'working';
+                        showToast('You are already punched in', 'info');
+                        renderPunchOutAction(lastPunch.punch_in, empId);
+                    } else {
+                        const now = new Date();
+                        const lastPunchTime = new Date(lastPunch.punch_out);
+                        const hoursSinceLastPunch = (now - lastPunchTime) / (1000 * 60 * 60);
+                        if (hoursSinceLastPunch >= 8) {
+                            employeeData.status = 'ready';
+                            renderPunchInAction();
+                        } else {
+                            employeeData.status = lastPunch.status === 'pending' ? 'pending' : 'completed';
+                            renderCompletedStatus(lastPunchTime, hoursSinceLastPunch);
+                        }
+                    }
+                }
+                updateStatusIndicator();
+                renderPunchHistory();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+                employeeData.status = 'ready';
+                renderPunchInAction();
+                updateStatusIndicator();
+                renderPunchHistory();
+            }
+        }
+
+        // Update status indicator UI
+        function updateStatusIndicator() {
+            switch (employeeData.status) {
+                case 'ready':
+                    statusDot.className = 'status-dot active';
+                    statusText.textContent = currentEmpId ? 'Active - Ready to punch in' : 'Enter Employee ID to check status';
+                    break;
+                case 'working':
+                    statusDot.className = 'status-dot active';
+                    statusText.textContent = 'Active - Currently working';
+                    break;
+                case 'completed':
+                    statusDot.className = 'status-dot completed';
+                    statusText.textContent = 'Completed - Attendance done for today';
+                    break;
+                case 'pending':
+                    statusDot.className = 'status-dot pending';
+                    statusText.textContent = 'Pending - Awaiting HR approval';
+                    break;
+                default:
+                    statusDot.className = 'status-dot inactive';
+                    statusText.textContent = 'Enter Employee ID to check status';
+            }
+        }
+
+        // Render punch in action
+        function renderPunchInAction() {
+            actionContainer.innerHTML = `
+                <div class="action-card">
+                    <h3 class="action-title">Start Your Workday</h3>
+                    <form class="action-form" id="punchInForm">
+                        <div class="form-group">
+                            <label for="empId" class="form-label">Employee ID</label>
+                            <input type="text" id="empId" class="form-input" placeholder="Enter ATS0XXX" required pattern="^[ATS]{3}0(?!000)[0-9]{3}$" value="${currentEmpId || ''}">
+                            <div class="error-message" id="empIdError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="password-container">
+                                <input type="password" id="password" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
+                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="shiftTime" class="form-label">Shift Timing</label>
+                            <input type="text" id="shiftTime" class="form-input" value="10:00 AM - 7:00 PM" readonly>
+                        </div>
+                        <button type="submit" class="action-button" id="punchInButton">
+                            <i class="fas fa-fingerprint"></i> Punch In
+                        </button>
+                        <p class="shift-info">New employee? Use your assigned ID or any valid ATS0XXX ID to start.</p>
+                    </form>
+                </div>
+            `;
+
+            let isSubmitting = false;
+            const empIdInput = document.getElementById('empId');
+            const passwordInput = document.getElementById('password');
+            const empIdError = document.getElementById('empIdError');
+            const passwordError = document.getElementById('passwordError');
+
+            empIdInput.addEventListener('input', () => {
+                validateInput(empIdInput, isValidEmployeeId, empIdError, 'ID must be ATS0 followed by 3 digits (001–999, e.g., ATS0123)');
+            });
+
+            passwordInput.addEventListener('input', () => {
+                validateInput(passwordInput, isValidPassword, passwordError, 'Password must be between 8 and 30 characters');
+            });
+
+            document.getElementById('punchInForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (isSubmitting) return;
+                isSubmitting = true;
+                const empId = empIdInput.value.trim();
+                const password = passwordInput.value;
+
+                if (!isValidEmployeeId(empId)) {
+                    showToast('Invalid Employee ID format. Use ATS0 followed by 3 digits (001–999, e.g., ATS0123)', 'error');
+                    isSubmitting = false;
+                    return;
+                }
+
+                if (!isValidPassword(password)) {
+                    showToast('Password must be between 8 and 30 characters', 'error');
+                    isSubmitting = false;
+                    return;
+                }
+
+                try {
+                    const validation = await validateCredentials(empId, password);
+                    currentEmpId = empId;
+                    employeeData.isNewEmployee = validation.isNewEmployee;
+                    const message = validation.isNewEmployee
+                        ? 'Are you a new employee? Punch in to start, pending HR approval.'
+                        : 'Are you sure you want to punch in and start your workday?';
+                    showConfirmationModal('Confirm Punch In', message, () => recordPunchIn(empId, password));
+                } catch (err) {
+                    showToast(`Error: ${err.message}`, 'error');
+                } finally {
+                    isSubmitting = false;
+                }
+            });
+
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Render punch out action
+        function renderPunchOutAction(punchInTime, empId) {
+            const punchInDate = new Date(punchInTime);
+            actionContainer.innerHTML = `
+                <div class="action-card">
+                    <h3 class="action-title">End Your Workday</h3>
+                    <form class="action-form" id="punchOutForm">
+                        <div class="form-group">
+                            <label for="empIdOut" class="form-label">Employee ID</label>
+                            <input type="text" id="empIdOut" class="form-input" value="${empId}" readonly>
+                            <div class="error-message" id="empIdError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordOut" class="form-label">Password</label>
+                            <div class="password-container">
+                                <input type="password" id="passwordOut" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
+                                <i class="fas fa-eye toggle-password" id="togglePasswordOut"></i>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="shiftTimeOut" class="form-label">Shift Timing</label>
+                            <input type="text" id="shiftTimeOut" class="form-input" value="10:00 AM - 7:00 PM" readonly>
+                        </div>
+                        <button type="submit" class="action-button" id="punchOutButton">
+                            <i class="fas fa-fingerprint"></i> Punch Out
+                        </button>
+                        <p class="shift-info">You've been working since ${punchInDate.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()} ${employeeData.isNewEmployee ? '(Pending HR approval)' : ''}</p>
+                    </form>
+                </div>
+            `;
+
+            let isSubmitting = false;
+            const passwordInput = document.getElementById('passwordOut');
+            const passwordError = document.getElementById('passwordError');
+
+            passwordInput.addEventListener('input', () => {
+                validateInput(passwordInput, isValidPassword, passwordError, 'Password must be between 8 and 30 characters');
+            });
+
+            document.getElementById('punchOutForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (isSubmitting) return;
+                isSubmitting = true;
+                const empId = document.getElementById('empIdOut').value;
+                const password = passwordInput.value;
+
+                if (!isValidPassword(password)) {
+                    showToast('Password must be between 8 and 30 characters', 'error');
+                    isSubmitting = false;
+                    return;
+                }
+
+                try {
+                    await validateCredentials(empId, password);
+                    showConfirmationModal(
+                        'Confirm Punch Out',
+                        `Are you sure you want to punch out and end your workday? ${employeeData.isNewEmployee ? 'This is pending HR approval.' : ''}`,
+                        () => recordPunchOut(empId, password)
+                    );
+                } catch (err) {
+                    showToast(`Error: ${err.message}`, 'error');
+                } finally {
+                    isSubmitting = false;
+                }
+            });
+
+            document.getElementById('togglePasswordOut').addEventListener('click', function() {
+                const passwordInput = document.getElementById('passwordOut');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Render completed status
+        function renderCompletedStatus(lastPunchTime, hoursSinceLastPunch) {
+            const nextPunchTime = new Date(lastPunchTime);
+            nextPunchTime.setHours(nextPunchTime.getHours() + 8);
+            const hoursRemaining = (8 - hoursSinceLastPunch).toFixed(1);
+            actionContainer.innerHTML = `
+                <div class="action-card">
+                    <h3 class="action-title">Start Your Workday</h3>
+                    <form class="action-form" id="punchInForm">
+                        <div class="form-group">
+                            <label for="empId" class="form-label">Employee ID</label>
+                            <input type="text" id="empId" class="form-input" placeholder="Enter ATS0XXX" required pattern="^[ATS]{3}0(?!000)[0-9]{3}$" value="${currentEmpId || ''}">
+                            <div class="error-message" id="empIdError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="password-container">
+                                <input type="password" id="password" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
+                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="shiftTime" class="form-label">Shift Timing</label>
+                            <input type="text" id="shiftTime" class="form-input" value="10:00 AM - 7:00 PM" readonly>
+                        </div>
+                        <button type="submit" class="action-button" disabled>
+                            <i class="fas fa-fingerprint"></i> Punch In
+                        </button>
+                        <p class="shift-info">Your shift timing is 10:00 AM - 7:00 PM ${employeeData.isNewEmployee ? '(Pending HR approval)' : ''}</p>
+                    </form>
+                </div>
+                <div class="attendance-completed">
+                    <div class="completed-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="completed-text">${employeeData.isNewEmployee ? 'Pending HR Approval' : 'Attendance Completed'}</h3>
+                    <p class="completed-subtext">You can punch in again at ${nextPunchTime.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()}</p>
+                    <p class="completed-subtext">${hoursRemaining} hours remaining</p>
+                </div>
+            `;
+
+            let isSubmitting = false;
+            const empIdInput = document.getElementById('empId');
+            const passwordInput = document.getElementById('password');
+            const empIdError = document.getElementById('empIdError');
+            const passwordError = document.getElementById('passwordError');
+
+            empIdInput.addEventListener('input', () => {
+                validateInput(empIdInput, isValidEmployeeId, empIdError, 'ID must be ATS0 followed by 3 digits (001–999, e.g., ATS0123)');
+            });
+
+            passwordInput.addEventListener('input', () => {
+                validateInput(passwordInput, isValidPassword, passwordError, 'Password must be between 8 and 30 characters');
+            });
+
+            document.getElementById('punchInForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (isSubmitting) return;
+                isSubmitting = true;
+                showToast('Cannot punch in yet. Please wait until the cooldown period ends.', 'error');
+                isSubmitting = false;
+            });
+
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Show confirmation modal
+        function showConfirmationModal(title, message, confirmCallback) {
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+            confirmAction.onclick = function() {
+                confirmCallback();
+                closeConfirmationModal();
+            };
+            confirmationModal.style.display = 'flex';
+        }
+
+        // Close confirmation modal
+        function closeConfirmationModal() {
+            confirmationModal.style.display = 'none';
+        }
+
+        // Record punch in
+        async function recordPunchIn(empId, password) {
+            try {
+                const response = await fetch('http://localhost:3000/api/attendance/punch-in', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ empId, password })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    if (result.alreadyPunchedIn) {
+                        showToast('You are already punched in', 'info');
+                        employeeData.status = result.record?.status === 'pending' ? 'pending' : 'working';
+                        renderPunchOutAction(result.record?.punch_in || new Date(), empId);
+                        updateStatusIndicator();
+                        return;
+                    }
+                    throw new Error(result.error || 'Punch in failed');
+                }
+                const data = {
+                    punch_in: result.record.punch_in,
+                    punch_out: null,
+                    employee_id: empId,
+                    status: result.record.status
+                };
+                punchRecords.unshift(data);
+                showToast(result.message, 'success');
+                determineStatus(empId);
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Record punch out
+        async function recordPunchOut(empId, password) {
+            try {
+                const response = await fetch('http://localhost:3000/api/attendance/punch-out', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ empId, password })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'Punch out failed');
+                const data = {
+                    punch_in: punchRecords[0].punch_in,
+                    punch_out: result.record.punch_out,
+                    employee_id: empId,
+                    status: result.record.status
+                };
+                punchRecords[0] = data;
+                showToast(result.message, 'success');
+                determineStatus(empId);
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Render punch history
+        function renderPunchHistory() {
+            if (!currentEmpId || punchRecords.length === 0) {
+                historyList.innerHTML = '<div class="no-records">Enter Employee ID to view history</div>';
+                return;
+            }
+            historyList.innerHTML = '';
+            punchRecords.forEach(record => {
+                if (record.punch_in) {
+                    addRecordToHistory({ time: record.punch_in, employee_id: record.employee_id, status: record.status }, 'in');
+                }
+                if (record.punch_out) {
+                    addRecordToHistory({ time: record.punch_out, employee_id: record.employee_id, status: record.status }, 'out');
+                }
+            });
+        }
+
+        // Add a single record to history
+        function addRecordToHistory(record, type) {
+            const formatted = formatDateTime(record.time);
+            const recordItem = document.createElement('div');
+            recordItem.className = 'record-item';
+            recordItem.innerHTML = `
+                <div>
+                    <span class="record-type ${type === 'in' ? 'punch-in' : 'punch-out'}">
+                        ${type === 'in' ? 'Punch In' : 'Punch Out'} ${record.status === 'pending' ? '(Pending)' : record.status === 'not-defined' ? '(Not Defined)' : ''}
+                    </span>
+                    <div class="record-date">${formatted.date}</div>
+                </div>
+                <div class="record-time">${formatted.time}</div>
+            `;
+            historyList.appendChild(recordItem);
+        }
+
+        // Show toast notification
+        function showToast(message, type) {
+            toastNotification.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            toastNotification.classList.add('show');
+            setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Event listeners
+        closeModal.addEventListener('click', closeConfirmationModal);
+        cancelAction.addEventListener('click', closeConfirmationModal);
+        window.addEventListener('click', (event) => {
+            if (event.target === confirmationModal) {
+                closeConfirmationModal();
+            }
+        });
+
+        // Initialize the page
+        initPage();
+    </script>
+</body>
+</html>
