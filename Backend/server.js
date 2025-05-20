@@ -28,7 +28,7 @@ const logger = winston.createLogger({
 const pool = new Pool({
    user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'new_employee_db',
+    database: process.env.DB_NAME || 'attendance_db',
     password: process.env.DB_PASSWORD || 'Password@12345',
     port: process.env.DB_PORT || 5432,
 });
