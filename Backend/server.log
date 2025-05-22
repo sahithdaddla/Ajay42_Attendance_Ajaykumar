@@ -1,4 +1,4 @@
 {"error":"database \"attendance\" does not exist","level":"error","message":"Database connection failed","timestamp":"2025-05-20T13:16:31.145Z"}
 {"level":"info","message":"Database connection successful: 2025-05-20T13:17:01.324Z","timestamp":"2025-05-20T13:17:01.326Z"}
 {"level":"info","message":"Database initialized successfully","timestamp":"2025-05-20T13:17:01.970Z"}
-{"level":"info","message":"Server running on port 3018","timestamp":"2025-05-20T13:17:01.981Z"}
+{"level":"info","message":"Server running on port 3019","timestamp":"2025-05-20T13:17:01.981Z"}
