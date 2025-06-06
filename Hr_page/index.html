@@ -37,6 +37,11 @@
             transition: all 0.3s ease;
         }
 
+        .dark-mode {
+            background-color: #121212;
+            color: var(--light);
+        }
+
         header {
             position: relative;
             text-align: center;
@@ -122,7 +127,7 @@
             padding: 0 1rem;
         }
 
-        .dashboard-card {
+        .attendance-card {
             background: var(--white);
             border-radius: 16px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
@@ -133,7 +138,12 @@
             overflow: hidden;
         }
 
-        .dashboard-card::after {
+        .dark-mode .attendance-card {
+            background: #1e1e1e;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .attendance-card::after {
             content: '';
             position: absolute;
             top: 0;
@@ -144,109 +154,246 @@
             transition: all 0.3s ease;
         }
 
-        .dashboard-card:hover::after {
+        .attendance-card:hover::after {
             width: 8px;
         }
 
-        .action-card {
-            background: linear-gradient(135deg, rgb(255, 255, 255), rgba(255, 255, 255, 0.1));
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(67, 97, 238, 0.2);
+        .filter-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .action-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
-        }
-
-        .action-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--bright-blue);
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-            text-align: left;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .filter-label {
             font-weight: 500;
             color: var(--dark);
         }
 
-        .form-input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+        .dark-mode .filter-label {
+            color: var(--light);
+        }
+
+        .filter-input {
+            padding: 8px;
+            border: 8px solid rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             font-size: 1rem;
-            transition: all 0.3s ease;
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--bright-blue);
-            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
-        }
-
-        .action-button {
-            background: linear-gradient(135deg, var(--bright-blue), var(--bright-purple));
+        .dark-mode .filter-input {
+            background-color: #2d2d2d;
+            border-color: rgba(255, 255, 255, 0.1);
             color: var(--white);
-            border: none;
-            border-radius: 50px;
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 180, 216, 0.3);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 200px;
-            margin-top: 1rem;
-        }
-
-        .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 180, 216, 0.4);
         }
 
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .attendance-table th,
-        .attendance-table td {
-            padding: 0.8rem;
+        .dark-mode .attendance-table {
+            background: #1e1e1e;
+        }
+
+        .attendance-table th, .attendance-table td {
+            padding: 12px;
             text-align: left;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .attendance-table th {
-            background: linear-gradient(135deg, rgba(0, 180, 216, 0.1), rgba(114, 9, 183, 0.1));
-            color: var(--bright-blue);
-            font-weight: 500;
+        .dark-mode .attendance-table th,
+        .dark-mode .attendance-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .attendance-table td {
-            color: var(--dark);
+        .attendance-table th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .attendance-table tr:hover {
+            background-color: rgba(0, 180, 216, 0.05);
+        }
+
+        .dark-mode .attendance-table tr:hover {
+            background-color: rgba(0, 180, 216, 0.1);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status-pending {
+            background-color: rgba(255, 123, 0, 0.1);
+            color: var(--bright-orange);
+        }
+
+        .status-approved {
+            background-color: rgba(56, 176, 0, 0.1);
+            color: var(--bright-green);
+        }
+
+        .status-rejected {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+
+        .status-in-progress {
+            background-color: rgba(72, 149, 239, 0.1);
+            color: var(--bright-blue);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .action-button.approve {
+            background-color: var(--bright-green);
+            color: var(--white);
+        }
+
+        .action-button.reject {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .action-button:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .action-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .no-records {
             text-align: center;
-            padding: 2rem;
+            padding: 20px;
             color: var(--gray);
             font-style: italic;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: modalOpen 0.3s ease forwards;
+        }
+
+        .dark-mode .modal-content {
+            background: #1e1e1e;
+        }
+
+        @keyframes modalOpen {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--bright-blue);
+        }
+
+        .dark-mode .modal-title {
+            color: var(--bright-green);
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-confirm {
+            background: linear-gradient(135deg, var(--bright-blue), var(--bright-purple));
+            color: var(--white);
+            border: none;
+        }
+
+        .modal-cancel {
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--gray);
+        }
+
+        .dark-mode .modal-cancel {
+            color: #b0b0b0;
+            border-color: #b0b0b0;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray);
         }
 
         .toast {
@@ -257,8 +404,8 @@
             color: var(--white);
             padding: 1rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            display: flex;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
             align-items: center;
             z-index: 1100;
             transform: translateX(200%);
@@ -266,7 +413,16 @@
         }
 
         .toast.show {
+            display: flex;
             transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--bright-green), var(--bright-blue));
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, var(--danger), #b5179e);
         }
 
         .toast i {
@@ -274,26 +430,20 @@
             font-size: 1.2rem;
         }
 
-        .toast.success {
-            background: linear-gradient(135deg, var(--bright-green), var(--bright-blue));
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, var(--danger), #b5179e);
-        }
-
-        .error-message {
-            color: var(--danger);
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
-        }
-
         @media (max-width: 768px) {
-            .attendance-table th,
-            .attendance-table td {
-                padding: 0.5rem;
+            .attendance-table th, .attendance-table td {
+                padding: 8px;
                 font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
 
@@ -306,17 +456,17 @@
                 font-size: 0.9rem;
             }
 
-            .dashboard-card {
+            .attendance-card {
                 padding: 1.5rem 1rem;
             }
 
-            .action-title {
-                font-size: 1.1rem;
+            .attendance-table {
+                font-size: 0.8rem;
             }
 
-            .attendance-table th,
-            .attendance-table td {
-                font-size: 0.8rem;
+            .action-button {
+                font-size: 0.7rem;
+                padding: 4px 8px;
             }
         }
     </style>
@@ -329,169 +479,201 @@
             <div class="circle"></div>
         </div>
         <h1>HR Attendance Dashboard</h1>
-        <p>View employee punch-in and punch-out timings</p>
+        <p>Manage and review employee attendance records</p>
     </header>
 
     <div class="container">
-        <div class="dashboard-card">
-            <div class="action-card">
-                <h3 class="action-title">Search Employee Attendance</h3>
-                <form class="action-form" id="searchForm">
-                    <div class="form-group">
-                        <label for="empId" class="form-label">Employee ID</label>
-                        <input type="text" id="empId" class="form-input" placeholder="Enter ATS0XXX" required pattern="^[ATS]{3}0(?!000)[0-9]{3}$" minlength="7" maxlength="7">
-                        <div class="error-message" id="empIdError"></div>
-                    </div>
-                    <button type="submit" class="action-button">
-                        <i class="fas fa-search"></i> Fetch Attendance
-                    </button>
-                </form>
+        <div class="attendance-card">
+            <div class="filter-group">
+                <label for="dateFilter" class="filter-label">Filter by Date:</label>
+                <input type="date" id="dateFilter" class="filter-input">
             </div>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Punch In</th>
+                        <th>Punch Out</th>
+                        <th>Status</th>
+                        <th>HR Approval</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTableBody">
+                    <tr>
+                        <td colspan="6" class="no-records">Loading attendance records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-            <div class="history-card">
-                <h3 class="action-title">Attendance Records</h3>
-                <table class="attendance-table" id="attendanceTable">
-                    <thead>
-                        <tr>
-                            <th>Employee ID</th>
-                            <th>Punch In</th>
-                            <th>Punch Out</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="attendanceBody">
-                        <tr><td colspan="4" class="no-records">Enter Employee ID to view attendance</td></tr>
-                    </tbody>
-                </table>
+    <!-- Modal for confirmation -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">×</button>
+            <h3 class="modal-title" id="modalTitle">Confirm Action</h3>
+            <div class="modal-body" id="modalBody">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" id="modalCancel">Cancel</button>
+                <button class="modal-button modal-confirm" id="modalConfirm">Confirm</button>
             </div>
         </div>
     </div>
 
     <!-- Toast notification -->
-    <div class="toast" id="toastNotification">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Attendance fetched successfully!</span>
+    <div class="toast" id="toast">
+        <i id="toastIcon"></i>
+        <span id="toastMessage"></span>
     </div>
 
     <script>
         // DOM Elements
-        const searchForm = document.getElementById('searchForm');
-        const empIdInput = document.getElementById('empId');
-        const empIdError = document.getElementById('empIdError');
-        const attendanceBody = document.getElementById('attendanceBody');
-        const toastNotification = document.getElementById('toastNotification');
+        const dateFilter = document.getElementById('dateFilter');
+        const attendanceTableBody = document.getElementById('attendanceTableBody');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalConfirm = document.getElementById('modalConfirm');
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toastIcon');
         const toastMessage = document.getElementById('toastMessage');
 
-        // Validation regex
-        const empIdRegex = /^[ATS]{3}0(?!000)[0-9]{3}$/;
+        // Current date for default filter
+        let selectedDate = new Date().toISOString().split('T')[0];
 
-        // Helper functions
-        function isValidEmployeeId(id) {
-            return empIdRegex.test(id);
-        }
-
-        function validateInput(input, regex, errorElement, errorMessage) {
-            if (input.value.trim() === '') {
-                errorElement.style.display = 'none';
-                errorElement.textContent = '';
-                return;
-            }
-            if (!regex.test(input.value)) {
-                errorElement.style.display = 'block';
-                errorElement.textContent = errorMessage;
-            } else {
-                errorElement.style.display = 'none';
-                errorElement.textContent = '';
-            }
-        }
-
-        async function fetchAttendanceRecords(empId) {
-            try {
-                const response = await fetch(`http://54.166.206.245:3019/api/attendance/${empId}`);
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
-                return data;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        function formatDateTime(isoString) {
-            if (!isoString) return '--';
-            const date = new Date(isoString);
-            return date.toLocaleString('en-IN', { 
-                timeZone: 'Asia/Kolkata', 
-                day: 'numeric', 
-                month: 'numeric', 
-                year: 'numeric', 
-                hour: 'numeric', 
-                minute: '2-digit', 
-                hour12: true 
-            }).toLowerCase();
-        }
-
-        function showToast(message, type) {
-            toastNotification.className = `toast ${type}`;
-            toastMessage.textContent = message;
-            toastNotification.classList.add('show');
-            setTimeout(() => {
-                toastNotification.classList.remove('show');
-            }, 3000);
-        }
-
-        function renderAttendanceRecords(records) {
-            attendanceBody.innerHTML = '';
-            if (records.length === 0) {
-                attendanceBody.innerHTML = '<tr><td colspan="4" class="no-records">No attendance records found</td></tr>';
-                return;
-            }
-            records.forEach(record => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${record.emp_id}</td>
-                    <td>${formatDateTime(record.punch_in)}</td>
-                    <td>${formatDateTime(record.punch_out)}</td>
-                    <td>${record.status.charAt(0).toUpperCase() + record.status.slice(1)}</td>
-                `;
-                attendanceBody.appendChild(row);
+        // Initialize the page
+        function initPage() {
+            dateFilter.value = selectedDate;
+            fetchAttendanceRecords();
+            dateFilter.addEventListener('change', () => {
+                selectedDate = dateFilter.value;
+                fetchAttendanceRecords();
             });
         }
 
-        // Real-time input validation
-        empIdInput.addEventListener('input', () => {
-            validateInput(
-                empIdInput,
-                empIdRegex,
-                empIdError,
-                'ID must be ATS0 followed by 3 digits (001–999, e.g., ATS0123)'
-            );
-        });
+        // Fetch all attendance records
+        async function fetchAttendanceRecords() {
+            try {
+                const response = await fetch(`http://54.166.206.245:3019/api/attendance/all${selectedDate ? `?date=${selectedDate}` : ''}`);
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
+                renderAttendanceTable(data);
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+                attendanceTableBody.innerHTML = '<tr><td colspan="6" class="no-records">Failed to load records</td></tr>';
+            }
+        }
 
-        // Form submission handler
-        let isSubmitting = false;
-        searchForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (isSubmitting) return;
-            isSubmitting = true;
+        // Format date and time
+        function formatDateTime(isoString) {
+            if (!isoString) return 'Not Available';
+            const date = new Date(isoString);
+            return date.toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                dateStyle: 'short',
+                timeStyle: 'short'
+            });
+        }
 
-            const empId = empIdInput.value.trim();
-            if (!isValidEmployeeId(empId)) {
-                showToast('Invalid Employee ID format. Use ATS0 followed by 3 digits (001–999, e.g., ATS0123)', 'error');
-                isSubmitting = false;
+        // Render attendance table
+        function renderAttendanceTable(records) {
+            if (records.length === 0) {
+                attendanceTableBody.innerHTML = '<tr><td colspan="6" class="no-records">No attendance records found for selected date</td></tr>';
                 return;
             }
 
+            attendanceTableBody.innerHTML = records.map(record => {
+                const canApproveOrReject = record.punch_out !== null || record.status === 'not-defined';
+                return `
+                    <tr>
+                        <td>${record.emp_id}</td>
+                        <td>${formatDateTime(record.punch_in)}</td>
+                        <td>${record.punch_out ? formatDateTime(record.punch_out) : record.status === 'not-defined' ? 'Auto-Punched Out (Missing)' : 'Not Punched Out'}</td>
+                        <td><span class="status-badge status-${record.status.toLowerCase().replace(' ', '-')}">${record.status}</span></td>
+                        <td><span class="status-badge status-${record.hr_approval.toLowerCase()}">${record.hr_approval}</span></td>
+                        <td class="action-buttons">
+                            <button class="action-button approve" onclick="showConfirmModal('Approve', 'Are you sure you want to approve this attendance record?', () => approveRecord('${record.id}'))" ${record.hr_approval !== 'pending' || !canApproveOrReject ? 'disabled' : ''}>
+                                Approve
+                            </button>
+                            <button class="action-button reject" onclick="showConfirmModal('Reject', 'Are you sure you want to reject this attendance record?', () => rejectRecord('${record.id}'))" ${record.hr_approval !== 'pending' || !canApproveOrReject ? 'disabled' : ''}>
+                                reject
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Approve attendance record
+        async function approveRecord(id) {
             try {
-                const records = await fetchAttendanceRecords(empId);
-                renderAttendanceRecords(records);
-                showToast('Attendance records fetched successfully', 'success');
+                const response = await fetch(`http://54.166.206.245:3019/api/attendance/approve/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to approve record');
+                }
+                showToast('Attendance approved successfully', 'success');
+                fetchAttendanceRecords();
             } catch (err) {
                 showToast(`Error: ${err.message}`, 'error');
-                attendanceBody.innerHTML = '<tr><td colspan="4" class="no-records">No attendance records found</td></tr>';
-            } finally {
-                isSubmitting = false;
             }
-        });
+        }
+
+        // Reject attendance record
+        async function rejectRecord(id) {
+            try {
+                const response = await fetch(`http://54.166.206.245:3019/api/attendance/reject/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to reject record');
+                showToast('Attendance rejected successfully', 'success');
+                fetchAttendanceRecords();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Show confirmation modal
+        function showConfirmModal(title, message, confirmCallback) {
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+            confirmationModal.style.display = 'flex';
+            modalConfirm.onclick = () => {
+                confirmCallback();
+                closeModal();
+            };
+            closeModalBtn.onclick = closeModal;
+            modalCancel.onclick = closeModal;
+        }
+
+        // Close modal
+        function closeModal() {
+            confirmationModal.style.display = 'none';
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.classList.remove('success', 'error');
+            toast.classList.add('show', type);
+            toastIcon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize the page
+        initPage();
     </script>
 </body>
 </html>

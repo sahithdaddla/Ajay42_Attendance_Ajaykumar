@@ -78,12 +78,6 @@
             z-index: 2;
         }
 
-        @keyframes moveCircles {
-            0% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-50%) translateX(-50%); }
-            100% { transform: translateY(0) translateX(0); }
-        }
-
         .banner-background {
             position: absolute;
             top: 0;
@@ -101,6 +95,12 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             animation: moveCircles 10s infinite linear;
+        }
+
+        @keyframes moveCircles {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-50%); }
+            100% { transform: translateY(0) translateX(0); }
         }
 
         .circle:nth-child(1) {
@@ -158,77 +158,6 @@
             width: 8px;
         }
 
-        .employee-profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, rgba(216, 243, 255, 0.616), rgba(251, 216, 255, 0.822));
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 180, 216, 0.2);
-        }
-
-        .dark-mode .employee-profile {
-            background: linear-gradient(135deg, rgba(0, 180, 216, 0.2), rgba(56, 176, 0, 0.2));
-            border: 1px solid rgba(0, 180, 216, 0.3);
-        }
-
-        .profile-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--white);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-right: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .profile-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: navy;
-        }
-
-        .dark-mode .profile-info h2 {
-            color: var(--bright-green);
-        }
-
-        .profile-details {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .profile-detail {
-            font-size: 1.3rem;
-            color: var(--gray);
-        }
-
-        .dark-mode .profile-detail {
-            color: #b0b0b0;
-        }
-
-        .profile-detail span {
-            font-weight: 500;
-            font-size: 1.2rem;
-            color: var(--dark);
-        }
-
-        .dark-mode .profile-detail span {
-            color: var(--light);
-        }
-
         .attendance-status {
             display: flex;
             justify-content: space-between;
@@ -276,8 +205,19 @@
             background-color: var(--bright-blue);
         }
 
+        .approved {
+            color:green;
+            background-color: white;
+        }
+
+        .rejected {
+            color: red;
+            background-color: white;
+        }
+
         .pending {
-            background-color: var(--bright-orange);
+            color: rgb(255, 166, 0);
+            background-color: #ffffff;
         }
 
         .status-text {
@@ -354,10 +294,10 @@
             transition: all 0.3s ease;
         }
 
-        .dark-mode .form-input {
+        .dark-mode .form-input intercepted {
             background-color: #2d2d2d;
             border-color: rgba(255, 255, 255, 0.1);
-            color: var(--light);
+            color: var(--white);
         }
 
         .form-input:focus {
@@ -373,23 +313,6 @@
 
         .dark-mode .form-input[readonly] {
             background-color: #2a2a2a;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--gray);
-        }
-
-        .dark-mode .toggle-password {
-            color: #b0b0b0;
         }
 
         .action-button {
@@ -619,10 +542,21 @@
             color: #b0b0b0;
         }
 
-        .record-duration {
+        .record-approval {
             font-size: 0.8rem;
-            color: var(--bright-orange);
             font-weight: 500;
+        }
+
+        .approved {
+            color: var(--bright-green);
+        }
+
+        .rejected {
+            color: var(--danger);
+        }
+
+        .pending {
+            color: var(--bright-orange);
         }
 
         .no-records {
@@ -664,10 +598,7 @@
         }
 
         @keyframes modalOpen {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-title {
@@ -750,11 +681,6 @@
             transform: translateX(0);
         }
 
-        .toast i {
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-        }
-
         .toast.success {
             background: linear-gradient(135deg, var(--bright-green), var(--bright-blue));
         }
@@ -765,6 +691,11 @@
 
         .toast.info {
             background: linear-gradient(135deg, var(--info), var(--primary));
+        }
+
+        .toast i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
         }
 
         .error-message {
@@ -778,17 +709,36 @@
             color: #ff5c99;
         }
 
+        .filter-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .dark-mode .filter-label {
+            color: var(--light);
+        }
+
+        .filter-input {
+            padding: 0.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .dark-mode .filter-input {
+            background-color: #2d2d2d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
         @media (max-width: 768px) {
-            .employee-profile {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .profile-image {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-
             .attendance-status {
                 flex-direction: column;
                 align-items: flex-start;
@@ -821,10 +771,6 @@
                 padding: 1.5rem 1rem;
             }
 
-            .profile-info h2 {
-                font-size: 1.3rem;
-            }
-
             .action-title {
                 font-size: 1.1rem;
             }
@@ -848,18 +794,6 @@
 
     <div class="container">
         <div class="attendance-card">
-            <div class="employee-profile">
-                <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Employee Icon" class="profile-image" id="profileImage">
-                <div class="profile-info">
-                    <h2 id="employeeName">Employee</h2>
-                    <div class="profile-details">
-                        <div class="profile-detail"><span>Shift:</span> <span id="shiftTiming">10:00 AM - 7:00 PM</span></div>
-                        <div class="profile-detail"><span>Role:</span> <span id="employeeRole">--</span></div>
-                        <div class="profile-detail"><span>Email:</span> <span id="employeeEmail">--</span></div>
-                    </div>
-                </div>
-            </div>
-
             <div class="attendance-status">
                 <div class="status-indicator">
                     <div class="status-dot inactive" id="statusDot"></div>
@@ -878,14 +812,6 @@
                             <div class="error-message" id="empIdError"></div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="password-container">
-                                <input type="password" id="password" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
-                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
-                            </div>
-                            <div class="error-message" id="passwordError"></div>
-                        </div>
-                        <div class="form-group">
                             <label for="shiftTime" class="form-label">Shift Timing</label>
                             <input type="text" id="shiftTime" class="form-input" value="10:00 AM - 7:00 PM" readonly>
                         </div>
@@ -898,7 +824,13 @@
             </div>
 
             <div class="history-card">
-                <h3 class="history-title"><i class="fas fa-history"></i> Attendance History</h3>
+                <div class="history-title">
+                    <i class="fas fa-history"></i> Attendance History
+                    <div class="filter-group" style="margin-left: auto;">
+                        <label for="dateFilter" class="filter-label">Filter by Date:</label>
+                        <input type="date" id="dateFilter" class="filter-input">
+                    </div>
+                </div>
                 <div class="history-list" id="historyList">
                     <div class="no-records">Enter Employee ID to view history</div>
                 </div>
@@ -934,10 +866,11 @@
         const currentTime = document.getElementById('currentTime');
         const actionContainer = document.getElementById('actionContainer');
         const historyList = document.getElementById('historyList');
+        const dateFilter = document.getElementById('dateFilter');
         const confirmationModal = document.getElementById('confirmationModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalBody = document.getElementById('modalBody');
-        const closeModal = document.getElementById('closeModal');
+        const closeModalBtn = document.getElementById('closeModal');
         const cancelAction = document.getElementById('cancelAction');
         const confirmAction = document.getElementById('confirmAction');
         const toastNotification = document.getElementById('toastNotification');
@@ -947,7 +880,7 @@
         let employeeData = {
             shiftStart: '10:00',
             shiftEnd: '19:00',
-            status: 'ready', // ready, working, completed, pending
+            status: 'ready', // ready, working, completed, pending, rejected
             isNewEmployee: false
         };
 
@@ -957,16 +890,15 @@
         // Current Employee ID
         let currentEmpId = null;
 
+        // Selected date for filtering
+        let selectedDate = new Date().toISOString().split('T')[0];
+
         // Validation regex
         const empIdRegex = /^[ATS]{3}0(?!000)[0-9]{3}$/;
 
         // Helper functions
         function isValidEmployeeId(id) {
             return empIdRegex.test(id);
-        }
-
-        function isValidPassword(password) {
-            return password.length >= 8 && password.length <= 30;
         }
 
         function validateInput(input, validationFn, errorElement, errorMessage) {
@@ -984,18 +916,15 @@
             }
         }
 
-        async function validateCredentials(empId, password) {
+        async function validateCredentials(empId) {
             if (!isValidEmployeeId(empId)) {
                 throw new Error('Invalid Employee ID format');
-            }
-            if (!isValidPassword(password)) {
-                throw new Error('Password must be between 8 and 30 characters');
             }
             try {
                 const response = await fetch('http://54.166.206.245:3019/api/auth/validate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ empId, password })
+                    body: JSON.stringify({ empId })
                 });
                 const data = await response.json();
                 if (!response.ok) {
@@ -1010,12 +939,15 @@
             }
         }
 
-        async function fetchAttendanceRecords(empId) {
+        async function fetchAttendanceRecords(empId, date) {
             try {
-                const response = await fetch(`http://54.166.206.245:3019/api/attendance/${empId}`);
+                const response = await fetch(`http://54.166.206.245:3019/api/attendance/${empId}${date ? `?date=${date}` : ''}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
-                return data;
+                return date ? data.filter(record => {
+                    const recordDate = new Date(record.punch_in).toISOString().split('T')[0];
+                    return recordDate === date;
+                }) : data;
             } catch (err) {
                 throw err;
             }
@@ -1029,7 +961,7 @@
 
         // Format time from ISO to display
         function formatDateTime(isoString) {
-            if (!isoString) return { time: '--', date: '--' };
+            if (!isoString) return { time: 'Not Available', date: '--' };
             const date = new Date(isoString);
             return {
                 time: date.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase(),
@@ -1037,12 +969,121 @@
             };
         }
 
+        // Render punch history
+        function renderPunchHistory() {
+            if (!currentEmpId || punchRecords.length === 0) {
+                historyList.innerHTML = `<div class="no-records">${currentEmpId ? 'No attendance records found for selected date' : 'Enter Employee ID to view history'}</div>`;
+                return;
+            }
+
+            historyList.innerHTML = punchRecords.map(record => {
+                const punchIn = formatDateTime(record.punch_in);
+                const punchOut = formatDateTime(record.punch_out);
+                return `
+                    <div class="record-item">
+                        <div>
+                            <span class="record-type punch-in">Punch In</span>
+                            <span class="record-time">${punchIn.time}</span>
+                            <div class="record-date">${punchIn.date}</div>
+                        </div>
+                        <div>
+                            <span class="record-type punch-out">Punch Out</span>
+                            <span class="record-time">${record.status === 'not-defined' ? 'Auto-Punched Out' : punchOut.time}</span>
+                            <div class="record-date">${punchOut.date}</div>
+                        </div>
+                        <div class="record-approval ${record.hr_approval.toLowerCase()}">${record.hr_approval}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toastNotification.classList.remove('success', 'error', 'info');
+            toastNotification.classList.add('show', type);
+            setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show confirmation modal
+        function showConfirmationModal(title, message, confirmCallback) {
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+            confirmationModal.style.display = 'flex';
+            confirmAction.onclick = () => {
+                confirmCallback();
+                confirmationModal.style.display = 'none';
+            };
+            closeModalBtn.onclick = cancelAction.onclick = () => {
+                confirmationModal.style.display = 'none';
+            };
+        }
+
+        // Record punch in
+        async function recordPunchIn(empId) {
+            try {
+                const response = await fetch('http://54.166.206.245:3019/api/attendance/punch-in', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ empId })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    if (data.alreadyPunchedIn) {
+                        showToast('You are already punched in', 'info');
+                        renderPunchOutAction(data.record.punch_in, empId);
+                        employeeData.status = data.record.hr_approval === 'rejected' ? 'rejected' : data.record.hr_approval === 'approved' ? 'completed' : 'pending';
+                        updateStatusIndicator();
+                        return;
+                    }
+                    throw new Error(data.error || 'Punch-in failed');
+                }
+                showToast(data.message, 'success');
+                punchRecords = await fetchAttendanceRecords(empId, selectedDate);
+                renderPunchOutAction(data.record.punch_in, empId);
+                employeeData.status = data.record.hr_approval === 'rejected' ? 'rejected' : data.record.hr_approval === 'approved' ? 'completed' : 'pending';
+                updateStatusIndicator();
+                renderPunchHistory();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Record punch out
+        async function recordPunchOut(empId) {
+            try {
+                const response = await fetch('http://54.166.206.245:3019/api/attendance/punch-out', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ empId })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Punch-out failed');
+                showToast(data.message, 'success');
+                punchRecords = await fetchAttendanceRecords(empId, selectedDate);
+                renderCompletedStatus(new Date(data.record.punch_out), 0);
+                employeeData.status = data.record.hr_approval === 'rejected' ? 'rejected' : data.record.hr_approval === 'approved' ? 'completed' : 'pending';
+                updateStatusIndicator();
+                renderPunchHistory();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
         // Initialize the page
         function initPage() {
             updateCurrentTime();
             setInterval(updateCurrentTime, 1000);
             renderPunchInAction();
-            // Add empId input listener
+            dateFilter.value = selectedDate;
+            dateFilter.addEventListener('change', async () => {
+                selectedDate = dateFilter.value;
+                if (currentEmpId) {
+                    await determineStatus(currentEmpId);
+                }
+            });
             document.getElementById('empId').addEventListener('input', async () => {
                 const empId = document.getElementById('empId').value.trim();
                 validateInput(
@@ -1070,25 +1111,25 @@
             }
 
             try {
-                punchRecords = await fetchAttendanceRecords(empId);
+                punchRecords = await fetchAttendanceRecords(empId, selectedDate);
                 if (punchRecords.length === 0) {
                     employeeData.status = 'ready';
                     renderPunchInAction();
                 } else {
                     const lastPunch = punchRecords[0];
-                    if (lastPunch.punch_out === null) {
-                        employeeData.status = lastPunch.status === 'pending' ? 'pending' : 'working';
+                    if (lastPunch.punch_out === null && lastPunch.status !== 'not-defined') {
+                        employeeData.status = lastPunch.hr_approval === 'rejected' ? 'rejected' : lastPunch.hr_approval === 'approved' ? 'completed' : 'pending';
                         showToast('You are already punched in', 'info');
                         renderPunchOutAction(lastPunch.punch_in, empId);
                     } else {
                         const now = new Date();
-                        const lastPunchTime = new Date(lastPunch.punch_out);
+                        const lastPunchTime = new Date(lastPunch.punch_out || lastPunch.punch_in);
                         const hoursSinceLastPunch = (now - lastPunchTime) / (1000 * 60 * 60);
-                        if (hoursSinceLastPunch >= 8) {
+                        if (hoursSinceLastPunch >= 8 || lastPunch.status === 'not-defined') {
                             employeeData.status = 'ready';
                             renderPunchInAction();
                         } else {
-                            employeeData.status = lastPunch.status === 'pending' ? 'pending' : 'completed';
+                            employeeData.status = lastPunch.hr_approval === 'rejected' ? 'rejected' : lastPunch.hr_approval === 'approved' ? 'completed' : 'pending';
                             renderCompletedStatus(lastPunchTime, hoursSinceLastPunch);
                         }
                     }
@@ -1117,11 +1158,15 @@
                     break;
                 case 'completed':
                     statusDot.className = 'status-dot completed';
-                    statusText.textContent = 'Completed - Attendance done for today';
+                    statusText.textContent = 'Completed - Attendance approved';
                     break;
                 case 'pending':
                     statusDot.className = 'status-dot pending';
                     statusText.textContent = 'Pending - Awaiting HR approval';
+                    break;
+                case 'rejected':
+                    statusDot.className = 'status-dot rejected';
+                    statusText.textContent = 'Rejected - Attendance rejected by HR';
                     break;
                 default:
                     statusDot.className = 'status-dot inactive';
@@ -1141,14 +1186,6 @@
                             <div class="error-message" id="empIdError"></div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="password-container">
-                                <input type="password" id="password" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
-                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
-                            </div>
-                            <div class="error-message" id="passwordError"></div>
-                        </div>
-                        <div class="form-group">
                             <label for="shiftTime" class="form-label">Shift Timing</label>
                             <input type="text" id="shiftTime" class="form-input" value="10:00 AM - 7:00 PM" readonly>
                         </div>
@@ -1162,16 +1199,10 @@
 
             let isSubmitting = false;
             const empIdInput = document.getElementById('empId');
-            const passwordInput = document.getElementById('password');
             const empIdError = document.getElementById('empIdError');
-            const passwordError = document.getElementById('passwordError');
 
             empIdInput.addEventListener('input', () => {
                 validateInput(empIdInput, isValidEmployeeId, empIdError, 'ID must be ATS0 followed by 3 digits (001–999, e.g., ATS0123)');
-            });
-
-            passwordInput.addEventListener('input', () => {
-                validateInput(passwordInput, isValidPassword, passwordError, 'Password must be between 8 and 30 characters');
             });
 
             document.getElementById('punchInForm').addEventListener('submit', async (e) => {
@@ -1179,7 +1210,6 @@
                 if (isSubmitting) return;
                 isSubmitting = true;
                 const empId = empIdInput.value.trim();
-                const password = passwordInput.value;
 
                 if (!isValidEmployeeId(empId)) {
                     showToast('Invalid Employee ID format. Use ATS0 followed by 3 digits (001–999, e.g., ATS0123)', 'error');
@@ -1187,32 +1217,19 @@
                     return;
                 }
 
-                if (!isValidPassword(password)) {
-                    showToast('Password must be between 8 and 30 characters', 'error');
-                    isSubmitting = false;
-                    return;
-                }
-
                 try {
-                    const validation = await validateCredentials(empId, password);
+                    const validation = await validateCredentials(empId);
                     currentEmpId = empId;
                     employeeData.isNewEmployee = validation.isNewEmployee;
                     const message = validation.isNewEmployee
                         ? 'Are you a new employee? Punch in to start, pending HR approval.'
                         : 'Are you sure you want to punch in and start your workday?';
-                    showConfirmationModal('Confirm Punch In', message, () => recordPunchIn(empId, password));
+                    showConfirmationModal('Confirm Punch In', message, () => recordPunchIn(empId));
                 } catch (err) {
                     showToast(`Error: ${err.message}`, 'error');
                 } finally {
                     isSubmitting = false;
                 }
-            });
-
-            document.getElementById('togglePassword').addEventListener('click', function() {
-                const passwordInput = document.getElementById('password');
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.classList.toggle('fa-eye-slash');
             });
         }
 
@@ -1229,14 +1246,6 @@
                             <div class="error-message" id="empIdError"></div>
                         </div>
                         <div class="form-group">
-                            <label for="passwordOut" class="form-label">Password</label>
-                            <div class="password-container">
-                                <input type="password" id="passwordOut" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
-                                <i class="fas fa-eye toggle-password" id="togglePasswordOut"></i>
-                            </div>
-                            <div class="error-message" id="passwordError"></div>
-                        </div>
-                        <div class="form-group">
                             <label for="shiftTimeOut" class="form-label">Shift Timing</label>
                             <input type="text" id="shiftTimeOut" class="form-input" value="10:00 AM - 7:00 PM" readonly>
                         </div>
@@ -1249,46 +1258,26 @@
             `;
 
             let isSubmitting = false;
-            const passwordInput = document.getElementById('passwordOut');
-            const passwordError = document.getElementById('passwordError');
-
-            passwordInput.addEventListener('input', () => {
-                validateInput(passwordInput, isValidPassword, passwordError, 'Password must be between 8 and 30 characters');
-            });
 
             document.getElementById('punchOutForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (isSubmitting) return;
                 isSubmitting = true;
                 const empId = document.getElementById('empIdOut').value;
-                const password = passwordInput.value;
-
-                if (!isValidPassword(password)) {
-                    showToast('Password must be between 8 and 30 characters', 'error');
-                    isSubmitting = false;
-                    return;
-                }
 
                 try {
-                    await validateCredentials(empId, password);
+                    await validateCredentials(empId);
                     showConfirmationModal(
                         'Confirm Punch Out',
                         `Are you sure you want to punch out and end your workday? ${employeeData.isNewEmployee ? 'This is pending HR approval.' : ''}`,
-                        () => recordPunchOut(empId, password)
-                    );
-                } catch (err) {
-                    showToast(`Error: ${err.message}`, 'error');
-                } finally {
-                    isSubmitting = false;
+                        () => recordPunchOut(empId));
+                    } catch (err) {
+                        showToast(`Error: ${err.message}`, 'error');
+                    } finally {
+                        isSubmitting = false;
+                    }
                 }
-            });
-
-            document.getElementById('togglePasswordOut').addEventListener('click', function() {
-                const passwordInput = document.getElementById('passwordOut');
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.classList.toggle('fa-eye-slash');
-            });
+            );
         }
 
         // Render completed status
@@ -1296,28 +1285,21 @@
             const nextPunchTime = new Date(lastPunchTime);
             nextPunchTime.setHours(nextPunchTime.getHours() + 8);
             const hoursRemaining = (8 - hoursSinceLastPunch).toFixed(1);
+            const punchIn = formatDateTime(lastPunchTime);
             actionContainer.innerHTML = `
                 <div class="action-card">
                     <h3 class="action-title">Start Your Workday</h3>
                     <form class="action-form" id="punchInForm">
                         <div class="form-group">
                             <label for="empId" class="form-label">Employee ID</label>
-                            <input type="text" id="empId" class="form-input" placeholder="Enter ATS0XXX" required pattern="^[ATS]{3}0(?!000)[0-9]{3}$" value="${currentEmpId || ''}">
+                            <input type="text" id="empId" class="form-input" placeholder="Enter ATS0XXX" required pattern="^[ATS]{3}0(?!000)[0-9]{3}" value="${currentEmpId || ''}">
                             <div class="error-message" id="empIdError"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="password-container">
-                                <input type="password" id="password" class="form-input" placeholder="Enter password (8-30 chars)" required minlength="8" maxlength="30">
-                                <i class="fas fa-eye toggle-password" id="togglePassword"></i>
-                            </div>
-                            <div class="error-message" id="passwordError"></div>
                         </div>
                         <div class="form-group">
                             <label for="shiftTime" class="form-label">Shift Timing</label>
                             <input type="text" id="shiftTime" class="form-input" value="10:00 AM - 7:00 PM" readonly>
                         </div>
-                        <button type="submit" class="action-button" disabled>
+                        <button type="submit" class="action-button disabled">
                             <i class="fas fa-fingerprint"></i> Punch In
                         </button>
                         <p class="shift-info">Your shift timing is 10:00 AM - 7:00 PM ${employeeData.isNewEmployee ? '(Pending HR approval)' : ''}</p>
@@ -1327,167 +1309,33 @@
                     <div class="completed-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h3 class="completed-text">${employeeData.isNewEmployee ? 'Pending HR Approval' : 'Attendance Completed'}</h3>
-                    <p class="completed-subtext">You can punch in again at ${nextPunchTime.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()}</p>
-                    <p class="completed-subtext">${hoursRemaining} hours remaining</p>
+                    <h3 class="completed-text">${employeeData.status === 'rejected' ? 'Attendance Rejected' : employeeData.isNewEmployee || employeeData.status === 'pending' ? 'Pending HR Approval' : 'Attendance Completed'}</h3>
+                    <div class="completed-details">
+                        <div class="completed-detail">
+                            <div class="detail-label">Punch Out Time</div>
+                            <div class="detail-value">${punchIn.time}</div>
+                        </div>
+                        <div class="completed-detail">
+                            <div class="detail-label">Next Punch In</div>
+                           <div class="detail-value">${hoursRemaining > 0 ? `After ${hoursRemaining} hours` : 'Now'}</div>
+                        </div>
+                    </div>
+                    <p class="completed-subtext">${employeeData.status === 'rejected' ? 'Your attendance was rejected by HR. Please contact HR for details.' : employeeData.isNewEmployee || employeeData.status === 'pending' ? 'Your attendance is awaiting HR approval.' : 'You have completed your workday. You can punch in again after the cooldown period.'}</p>
                 </div>
             `;
 
-            let isSubmitting = false;
             const empIdInput = document.getElementById('empId');
-            const passwordInput = document.getElementById('password');
             const empIdError = document.getElementById('empIdError');
-            const passwordError = document.getElementById('passwordError');
 
             empIdInput.addEventListener('input', () => {
-                validateInput(empIdInput, isValidEmployeeId, empIdError, 'ID must be ATS0 followed by 3 digits (001–999, e.g., ATS0123)');
-            });
-
-            passwordInput.addEventListener('input', () => {
-                validateInput(passwordInput, isValidPassword, passwordError, 'Password must be between 8 and 30 characters');
+                validateInput(empIdInput, isValidEmployeeId, empIdError, 'ID must be ATS0 followed by 3 digits (001-999, e.g., ATS0123)');
             });
 
             document.getElementById('punchInForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                if (isSubmitting) return;
-                isSubmitting = true;
-                showToast('Cannot punch in yet. Please wait until the cooldown period ends.', 'error');
-                isSubmitting = false;
-            });
-
-            document.getElementById('togglePassword').addEventListener('click', function() {
-                const passwordInput = document.getElementById('password');
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.classList.toggle('fa-eye-slash');
+                showToast('Cannot punch in yet. Please wait until the cooldown period is over.', 'info');
             });
         }
-
-        // Show confirmation modal
-        function showConfirmationModal(title, message, confirmCallback) {
-            modalTitle.textContent = title;
-            modalBody.textContent = message;
-            confirmAction.onclick = function() {
-                confirmCallback();
-                closeConfirmationModal();
-            };
-            confirmationModal.style.display = 'flex';
-        }
-
-        // Close confirmation modal
-        function closeConfirmationModal() {
-            confirmationModal.style.display = 'none';
-        }
-
-        // Record punch in
-        async function recordPunchIn(empId, password) {
-            try {
-                const response = await fetch('http://54.166.206.245:3019/api/attendance/punch-in', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ empId, password })
-                });
-                const result = await response.json();
-                if (!response.ok) {
-                    if (result.alreadyPunchedIn) {
-                        showToast('You are already punched in', 'info');
-                        employeeData.status = result.record?.status === 'pending' ? 'pending' : 'working';
-                        renderPunchOutAction(result.record?.punch_in || new Date(), empId);
-                        updateStatusIndicator();
-                        return;
-                    }
-                    throw new Error(result.error || 'Punch in failed');
-                }
-                const data = {
-                    punch_in: result.record.punch_in,
-                    punch_out: null,
-                    employee_id: empId,
-                    status: result.record.status
-                };
-                punchRecords.unshift(data);
-                showToast(result.message, 'success');
-                determineStatus(empId);
-            } catch (err) {
-                showToast(`Error: ${err.message}`, 'error');
-            }
-        }
-
-        // Record punch out
-        async function recordPunchOut(empId, password) {
-            try {
-                const response = await fetch('http://54.166.206.245:3019/api/attendance/punch-out', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ empId, password })
-                });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.error || 'Punch out failed');
-                const data = {
-                    punch_in: punchRecords[0].punch_in,
-                    punch_out: result.record.punch_out,
-                    employee_id: empId,
-                    status: result.record.status
-                };
-                punchRecords[0] = data;
-                showToast(result.message, 'success');
-                determineStatus(empId);
-            } catch (err) {
-                showToast(`Error: ${err.message}`, 'error');
-            }
-        }
-
-        // Render punch history
-        function renderPunchHistory() {
-            if (!currentEmpId || punchRecords.length === 0) {
-                historyList.innerHTML = '<div class="no-records">Enter Employee ID to view history</div>';
-                return;
-            }
-            historyList.innerHTML = '';
-            punchRecords.forEach(record => {
-                if (record.punch_in) {
-                    addRecordToHistory({ time: record.punch_in, employee_id: record.employee_id, status: record.status }, 'in');
-                }
-                if (record.punch_out) {
-                    addRecordToHistory({ time: record.punch_out, employee_id: record.employee_id, status: record.status }, 'out');
-                }
-            });
-        }
-
-        // Add a single record to history
-        function addRecordToHistory(record, type) {
-            const formatted = formatDateTime(record.time);
-            const recordItem = document.createElement('div');
-            recordItem.className = 'record-item';
-            recordItem.innerHTML = `
-                <div>
-                    <span class="record-type ${type === 'in' ? 'punch-in' : 'punch-out'}">
-                        ${type === 'in' ? 'Punch In' : 'Punch Out'} ${record.status === 'pending' ? '(Pending)' : record.status === 'not-defined' ? '(Not Defined)' : ''}
-                    </span>
-                    <div class="record-date">${formatted.date}</div>
-                </div>
-                <div class="record-time">${formatted.time}</div>
-            `;
-            historyList.appendChild(recordItem);
-        }
-
-        // Show toast notification
-        function showToast(message, type) {
-            toastNotification.className = `toast ${type}`;
-            toastMessage.textContent = message;
-            toastNotification.classList.add('show');
-            setTimeout(() => {
-                toastNotification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Event listeners
-        closeModal.addEventListener('click', closeConfirmationModal);
-        cancelAction.addEventListener('click', closeConfirmationModal);
-        window.addEventListener('click', (event) => {
-            if (event.target === confirmationModal) {
-                closeConfirmationModal();
-            }
-        });
 
         // Initialize the page
         initPage();
