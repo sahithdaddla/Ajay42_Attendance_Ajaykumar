@@ -559,7 +559,7 @@
         // Fetch all attendance records
         async function fetchAttendanceRecords() {
             try {
-                const response = await fetch(`http://54.166.206.245:3019/api/attendance/all${selectedDate ? `?date=${selectedDate}` : ''}`);
+                const response = await fetch(`http://44.223.23.145:3427/api/attendance/all${selectedDate ? `?date=${selectedDate}` : ''}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
                 renderAttendanceTable(data);
@@ -612,7 +612,7 @@
         // Approve attendance record
         async function approveRecord(id) {
             try {
-                const response = await fetch(`http://54.166.206.245:3019/api/attendance/approve/${id}`, {
+                const response = await fetch(`http://44.223.23.145:3427/api/attendance/approve/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -630,7 +630,7 @@
         // Reject attendance record
         async function rejectRecord(id) {
             try {
-                const response = await fetch(`http://54.166.206.245:3019/api/attendance/reject/${id}`, {
+                const response = await fetch(`http://44.223.23.145:3427/api/attendance/reject/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' }
                 });

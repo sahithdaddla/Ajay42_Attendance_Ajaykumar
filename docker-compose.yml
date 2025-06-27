@@ -4,9 +4,9 @@ services:
   backend:
     build: ./Backend
     ports:
-      - "3019:3019"
+      - "3427:3427"
     environment:
-      - PORT=3019
+      - PORT=3427
       - DB_USER=postgres
       - DB_HOST=postgres
       - DB_NAME=attendance_db
@@ -20,14 +20,14 @@ services:
   frontend:
     build: ./Frontend
     ports:
-      - "8133:80"
+      - "8051:80"
     networks:
       - app-network
 
   hr_page:
     build: ./Hr_page
     ports:
-      - "8134:80"
+      - "8052:80"
     networks:
       - app-network
 
@@ -35,7 +35,7 @@ services:
     image: postgres:14
     restart: always
     ports:
-      - "5447:5432"
+      - "5427:5432"
     environment:
       POSTGRES_DB: attendance_db
       POSTGRES_USER: postgres

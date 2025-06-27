@@ -6,7 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3019;
+const port = process.env.PORT || 3427;
 
 // Logger setup
 const logger = winston.createLogger({
@@ -32,7 +32,7 @@ const pool = new Pool({
 
 // Middleware
 app.use(cors({
-    origin: ['http://54.166.206.245:3019', 'http://localhost:3019', 'http://127.0.0.1:5501', 'http://127.0.0.1:5503'],
+    origin: ['http://44.223.23.145:8050','http://44.223.23.145:8051','http://44.223.23.145:3427', 'http://localhost:3019', 'http://127.0.0.1:5501', 'http://127.0.0.1:5503'],
     methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type']
 }));
@@ -317,9 +317,9 @@ pool.connect()
         initializeDatabase().then(() => {
             app.listen(port, '0.0.0.0', () => {
                 logger.info(`Server running on port ${port}`);
-                console.log(`Health check: http://54.166.206.245:${port}/health`);
-                console.log(`HR Dashboard: http://54.166.206.245:${port}/attendance.html`);
-                console.log(`Employee Attendance: http://54.166.206.245:${port}/employee_attendance.html`);
+                console.log(`Health check: http://44.223.23.145:${port}/health`);
+                console.log(`HR Dashboard: http://44.223.23.145:${port}/attendance.html`);
+                console.log(`Employee Attendance: http://44.223.23.145:${port}/employee_attendance.html`);
             });
         });
     })
