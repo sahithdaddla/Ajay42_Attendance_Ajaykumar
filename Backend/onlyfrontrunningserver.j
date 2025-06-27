@@ -28,6 +28,7 @@ const poolConfig = {
     database: process.env.DB_NAME || 'attendance_db',
     password: process.env.DB_PASSWORD || 'admin123',
     port: process.env.DB_PORT || 5432,
+    // Connection retry settings
     retry: {
         max: process.env.DB_RETRIES || 5,
         backoff: process.env.DB_RETRY_DELAY || 1000
@@ -60,40 +61,12 @@ async function checkDatabaseConnection(retries = 5, delay = 3000) {
     throw new Error('Could not establish database connection after retries');
 }
 
-// CORS Configuration
-const allowedOrigins = [
-    'http://44.223.23.145:8051', // Frontend
-    'http://44.223.23.145:8052', // HR Page
-    'http://44.223.23.145:3427', // Backend
-    'http://localhost:3019',
-    'http://127.0.0.1:5501',
-    'http://127.0.0.1:5503'
-];
-
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-    credentials: true
-}));
-
-// CORS error handling
-app.use((err, req, res, next) => {
-    if (err.message === 'Not allowed by CORS') {
-        logger.warn('CORS blocked request', { origin: req.headers.origin });
-        res.status(403).json({ error: 'CORS policy blocked this request' });
-    } else {
-        next(err);
-    }
-});
-
 // Middleware
+app.use(cors({
+    origin: ['http://44.223.23.145:8050','http://44.223.23.145:8051','http://44.223.23.145:3427', 'http://localhost:3019', 'http://127.0.0.1:5501', 'http://127.0.0.1:5503'],
+    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+    allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use((req, res, next) => {
@@ -153,7 +126,7 @@ async function initializeDatabase() {
     }
 }
 
-// Health check endpoint with database verification
+// Health check
 app.get('/health', async (req, res) => {
     try {
         await pool.query('SELECT 1');
@@ -172,7 +145,6 @@ app.get('/health', async (req, res) => {
     }
 });
 
-// [All your existing route handlers remain exactly the same...]
 // Validate employee credentials
 app.post('/api/auth/validate', async (req, res) => {
     const { empId } = req.body;

@@ -12,10 +12,19 @@ services:
       - DB_NAME=attendance_db
       - DB_PASSWORD=admin123
       - DB_PORT=5432
+      - DB_RETRIES=5
+      - DB_RETRY_DELAY=3000
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3427/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   frontend:
     build: ./Frontend
@@ -23,6 +32,8 @@ services:
       - "8051:80"
     networks:
       - app-network
+    depends_on:
+      - backend
 
   hr_page:
     build: ./Hr_page
@@ -30,6 +41,8 @@ services:
       - "8052:80"
     networks:
       - app-network
+    depends_on:
+      - backend
 
   postgres:
     image: postgres:14
@@ -45,10 +58,15 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d attendance_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   pgdata:
 
 networks:
   app-network:
-
+    driver: bridge
