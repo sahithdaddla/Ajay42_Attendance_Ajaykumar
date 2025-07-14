@@ -46,7 +46,7 @@
             position: relative;
             text-align: center;
             height: 140px;
-            background: linear-gradient(rgb(10, 10, 255),rgb(203, 11, 242));
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #f8f9fa;
             border-radius: 16px;
             overflow: hidden;
@@ -176,7 +176,7 @@
 
         .filter-input {
             padding: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 8px solid rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             font-size: 1rem;
         }
@@ -255,26 +255,6 @@
         .status-in-progress {
             background-color: rgba(72, 149, 239, 0.1);
             color: var(--bright-blue);
-        }
-
-        .status-absent {
-            background-color: rgba(247, 37, 133, 0.1);
-            color: var(--danger);
-        }
-
-        .status-half-day {
-            background-color: rgba(255, 123, 0, 0.1);
-            color: var(--bright-orange);
-        }
-
-        .status-full-day {
-            background-color: rgba(56, 176, 0, 0.1);
-            color: var(--bright-green);
-        }
-
-        .status-invalid {
-            background-color: rgba(108, 117, 125, 0.1);
-            color: var(--gray);
         }
 
         .action-buttons {
@@ -600,18 +580,6 @@
             });
         }
 
-        // Calculate attendance status based on hours
-        function calculateAttendanceStatus(punchIn, punchOut) {
-            if (!punchIn || !punchOut) return 'invalid';
-            const inTime = new Date(punchIn);
-            const outTime = new Date(punchOut);
-            const hours = (outTime - inTime) / (1000 * 60 * 60);
-            
-            if (hours < 4) return 'absent';
-            if (hours >= 4 && hours < 8) return 'half-day';
-            return 'full-day';
-        }
-
         // Render attendance table
         function renderAttendanceTable(records) {
             if (records.length === 0) {
@@ -620,34 +588,21 @@
             }
 
             attendanceTableBody.innerHTML = records.map(record => {
-                const canApproveOrReject = record.hr_approval === 'pending' && record.status !== 'invalid';
-                const status = record.status === 'invalid' ? 'invalid' : calculateAttendanceStatus(record.punch_in, record.punch_out);
-                
-                let actionContent = '';
-                if (record.hr_approval === 'approved') {
-                    actionContent = '<span class="status-badge status-approved">Approved</span>';
-                } else if (record.hr_approval === 'rejected') {
-                    actionContent = '<span class="status-badge status-rejected">Rejected</span>';
-                } else {
-                    actionContent = `
-                        <button class="action-button approve" onclick="showConfirmModal('Approve', 'Are you sure you want to approve this attendance record?', () => approveRecord('${record.id}'))" ${!canApproveOrReject ? 'disabled' : ''}>
-                            Approve
-                        </button>
-                        <button class="action-button reject" onclick="showConfirmModal('Reject', 'Are you sure you want to reject this attendance record?', () => rejectRecord('${record.id}'))" ${!canApproveOrReject ? 'disabled' : ''}>
-                            Reject
-                        </button>
-                    `;
-                }
-
+                const canApproveOrReject = record.punch_out !== null || record.status === 'not-defined';
                 return `
                     <tr>
                         <td>${record.emp_id}</td>
                         <td>${formatDateTime(record.punch_in)}</td>
-                        <td>${record.punch_out ? formatDateTime(record.punch_out) : record.status === 'invalid' ? 'Auto-Punched Out (Missing)' : 'Not Punched Out'}</td>
-                        <td><span class="status-badge status-${status.toLowerCase().replace(' ', '-')}">${status.replace('-', ' ')}</span></td>
+                        <td>${record.punch_out ? formatDateTime(record.punch_out) : record.status === 'not-defined' ? 'Auto-Punched Out (Missing)' : 'Not Punched Out'}</td>
+                        <td><span class="status-badge status-${record.status.toLowerCase().replace(' ', '-')}">${record.status}</span></td>
                         <td><span class="status-badge status-${record.hr_approval.toLowerCase()}">${record.hr_approval}</span></td>
                         <td class="action-buttons">
-                            ${actionContent}
+                            <button class="action-button approve" onclick="showConfirmModal('Approve', 'Are you sure you want to approve this attendance record?', () => approveRecord('${record.id}'))" ${record.hr_approval !== 'pending' || !canApproveOrReject ? 'disabled' : ''}>
+                                Approve
+                            </button>
+                            <button class="action-button reject" onclick="showConfirmModal('Reject', 'Are you sure you want to reject this attendance record?', () => rejectRecord('${record.id}'))" ${record.hr_approval !== 'pending' || !canApproveOrReject ? 'disabled' : ''}>
+                                reject
+                            </button>
                         </td>
                     </tr>
                 `;
