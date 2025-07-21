@@ -923,7 +923,7 @@
                 throw new Error('Invalid Employee ID format');
             }
             try {
-                const response = await fetch('http://16.170.246.73:3427/api/auth/validate', {
+                const response = await fetch('http://13.49.44.9:3427/api/auth/validate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId })
@@ -943,7 +943,7 @@
 
         async function fetchAttendanceRecords(empId, date) {
             try {
-                const response = await fetch(`http://16.170.246.73:3427/api/attendance/${empId}${date ? `?date=${date}` : ''}`);
+                const response = await fetch(`http://13.49.44.9:3427/api/attendance/${empId}${date ? `?date=${date}` : ''}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
                 return date ? data.filter(record => {
@@ -1026,7 +1026,7 @@
         // Record punch in
         async function recordPunchIn(empId) {
             try {
-                const response = await fetch('http://16.170.246.73:3427/api/attendance/punch-in', {
+                const response = await fetch('http://13.49.44.9:3427/api/attendance/punch-in', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId })
@@ -1056,7 +1056,7 @@
         // Record punch out
         async function recordPunchOut(empId) {
             try {
-                const response = await fetch('http://16.170.246.73:3427/api/attendance/punch-out', {
+                const response = await fetch('http://13.49.44.9:3427/api/attendance/punch-out', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId })
