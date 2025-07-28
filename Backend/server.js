@@ -62,9 +62,9 @@ async function checkDatabaseConnection(retries = 5, delay = 3000) {
 
 // CORS Configuration
 const allowedOrigins = [
-    'http://13.60.236.63:8051', // Frontend
-    'http://13.60.236.63:8052', // HR Page
-    'http://13.60.236.63:3427', // Backend
+    'http://56.228.30.223:8051', // Frontend
+    'http://56.228.30.223:8052', // HR Page
+    'http://56.228.30.223:3427', // Backend
     'http://localhost:3019',
     'http://127.0.0.1:5501',
     'http://127.0.0.1:5503'
@@ -386,9 +386,9 @@ async function startServer() {
         
         app.listen(port, '0.0.0.0', () => {
             logger.info(`Server running on port ${port}`);
-            console.log(`Health check: http://13.60.236.63:${port}/health`);
-            console.log(`HR Dashboard: http://13.60.236.63:${port}/attendance.html`);
-            console.log(`Employee Attendance: http://13.60.236.63:${port}/employee_attendance.html`);
+            console.log(`Health check: http://56.228.30.223:${port}/health`);
+            console.log(`HR Dashboard: http://56.228.30.223:${port}/attendance.html`);
+            console.log(`Employee Attendance: http://56.228.30.223:${port}/employee_attendance.html`);
         });
     } catch (err) {
         logger.error('Server startup failed', { error: err.message });
