@@ -32,7 +32,6 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ffffff;
             color: var(--dark);
             transition: all 0.3s ease;
@@ -278,11 +277,143 @@
             color: var(--gray);
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .action-button.approve {
+            background-color: var(--bright-green);
+            color: var(--white);
+        }
+
+        .action-button.reject {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .action-button:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .action-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .no-records {
             text-align: center;
             padding: 20px;
             color: var(--gray);
             font-style: italic;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: modalOpen 0.3s ease forwards;
+        }
+
+        .dark-mode .modal-content {
+            background: #1e1e1e;
+        }
+
+        @keyframes modalOpen {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--bright-blue);
+        }
+
+        .dark-mode .modal-title {
+            color: var(--bright-green);
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-confirm {
+            background: linear-gradient(135deg, var(--bright-blue), var(--bright-purple));
+            color: var(--white);
+            border: none;
+        }
+
+        .modal-cancel {
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--gray);
+        }
+
+        .dark-mode .modal-cancel {
+            color: #b0b0b0;
+            border-color: #b0b0b0;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray);
         }
 
         .toast {
@@ -325,6 +456,11 @@
                 font-size: 0.9rem;
             }
 
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+
             .filter-group {
                 flex-direction: column;
                 align-items: flex-start;
@@ -346,6 +482,11 @@
 
             .attendance-table {
                 font-size: 0.8rem;
+            }
+
+            .action-button {
+                font-size: 0.7rem;
+                padding: 4px 8px;
             }
         }
     </style>
@@ -374,14 +515,31 @@
                         <th>Punch In</th>
                         <th>Punch Out</th>
                         <th>Status</th>
+                        <th>HR Approval</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="attendanceTableBody">
                     <tr>
-                        <td colspan="4" class="no-records">Loading attendance records...</td>
+                        <td colspan="6" class="no-records">Loading attendance records...</td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Modal for confirmation -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">×</button>
+            <h3 class="modal-title" id="modalTitle">Confirm Action</h3>
+            <div class="modal-body" id="modalBody">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" id="modalCancel">Cancel</button>
+                <button class="modal-button modal-confirm" id="modalConfirm">Confirm</button>
+            </div>
         </div>
     </div>
 
@@ -395,6 +553,12 @@
         // DOM Elements
         const dateFilter = document.getElementById('dateFilter');
         const attendanceTableBody = document.getElementById('attendanceTableBody');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalConfirm = document.getElementById('modalConfirm');
         const toast = document.getElementById('toast');
         const toastIcon = document.getElementById('toastIcon');
         const toastMessage = document.getElementById('toastMessage');
@@ -415,13 +579,13 @@
         // Fetch all attendance records
         async function fetchAttendanceRecords() {
             try {
-                const response = await fetch(`http://13.60.236.63:3427/api/attendance/all${selectedDate ? `?date=${selectedDate}` : ''}`);
+                const response = await fetch(`http://13.49.44.9:3427/api/attendance/all${selectedDate ? `?date=${selectedDate}` : ''}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
                 renderAttendanceTable(data);
             } catch (err) {
                 showToast(`Error: ${err.message}`, 'error');
-                attendanceTableBody.innerHTML = '<tr><td colspan="4" class="no-records">Failed to load records</td></tr>';
+                attendanceTableBody.innerHTML = '<tr><td colspan="6" class="no-records">Failed to load records</td></tr>';
             }
         }
 
@@ -451,22 +615,95 @@
         // Render attendance table
         function renderAttendanceTable(records) {
             if (records.length === 0) {
-                attendanceTableBody.innerHTML = '<tr><td colspan="4" class="no-records">No attendance records found for selected date</td></tr>';
+                attendanceTableBody.innerHTML = '<tr><td colspan="6" class="no-records">No attendance records found for selected date</td></tr>';
                 return;
             }
 
             attendanceTableBody.innerHTML = records.map(record => {
+                const canApproveOrReject = record.hr_approval === 'pending' && record.status !== 'invalid';
                 const status = record.status === 'invalid' ? 'invalid' : calculateAttendanceStatus(record.punch_in, record.punch_out);
                 
+                let actionContent = '';
+                if (record.hr_approval === 'approved') {
+                    actionContent = '<span class="status-badge status-approved">Approved</span>';
+                } else if (record.hr_approval === 'rejected') {
+                    actionContent = '<span class="status-badge status-rejected">Rejected</span>';
+                } else {
+                    actionContent = `
+                        <button class="action-button approve" onclick="showConfirmModal('Approve', 'Are you sure you want to approve this attendance record?', () => approveRecord('${record.id}'))" ${!canApproveOrReject ? 'disabled' : ''}>
+                            Approve
+                        </button>
+                        <button class="action-button reject" onclick="showConfirmModal('Reject', 'Are you sure you want to reject this attendance record?', () => rejectRecord('${record.id}'))" ${!canApproveOrReject ? 'disabled' : ''}>
+                            Reject
+                        </button>
+                    `;
+                }
+
                 return `
                     <tr>
                         <td>${record.emp_id}</td>
                         <td>${formatDateTime(record.punch_in)}</td>
                         <td>${record.punch_out ? formatDateTime(record.punch_out) : record.status === 'invalid' ? 'Auto-Punched Out (Missing)' : 'Not Punched Out'}</td>
                         <td><span class="status-badge status-${status.toLowerCase().replace(' ', '-')}">${status.replace('-', ' ')}</span></td>
+                        <td><span class="status-badge status-${record.hr_approval.toLowerCase()}">${record.hr_approval}</span></td>
+                        <td class="action-buttons">
+                            ${actionContent}
+                        </td>
                     </tr>
                 `;
             }).join('');
+        }
+
+        // Approve attendance record
+        async function approveRecord(id) {
+            try {
+                const response = await fetch(`http://13.49.44.9:3427/api/attendance/approve/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to approve record');
+                }
+                showToast('Attendance approved successfully', 'success');
+                fetchAttendanceRecords();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Reject attendance record
+        async function rejectRecord(id) {
+            try {
+                const response = await fetch(`http://13.49.44.9:3427/api/attendance/reject/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to reject record');
+                showToast('Attendance rejected successfully', 'success');
+                fetchAttendanceRecords();
+            } catch (err) {
+                showToast(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Show confirmation modal
+        function showConfirmModal(title, message, confirmCallback) {
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+            confirmationModal.style.display = 'flex';
+            modalConfirm.onclick = () => {
+                confirmCallback();
+                closeModal();
+            };
+            closeModalBtn.onclick = closeModal;
+            modalCancel.onclick = closeModal;
+        }
+
+        // Close modal
+        function closeModal() {
+            confirmationModal.style.display = 'none';
         }
 
         // Show toast notification

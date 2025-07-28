@@ -169,7 +169,7 @@
             border: 1px solid rgba(114, 9, 183, 0.2);
         }
 
-        .dark-mode .attendance-status {
+        .dark-modeKnight .attendance-status {
             background: linear-gradient(135deg, rgba(114, 9, 183, 0.2), rgba(0, 180, 216, 0.2));
             border: 1px solid rgba(114, 9, 183, 0.3);
         }
@@ -205,19 +205,19 @@
             background-color: var(--bright-blue);
         }
 
-        .present {
-            color: var(--bright-green);
-            background-color: var(--white);
+        .approved {
+            color: green;
+            background-color: white;
         }
 
-        .absent {
-            color: var(--danger);
-            background-color: var(--white);
+        .rejected {
+            color: red;
+            background-color: white;
         }
 
-        .half-day {
-            color: var(--bright-orange);
-            background-color: var(--white);
+        .pending {
+            color: rgb(255, 166, 0);
+            background-color: #ffffff;
         }
 
         .status-text {
@@ -227,7 +227,7 @@
 
         .current-time {
             font-size: 0.9rem;
-            color: var(--dark);
+            color: black;
         }
 
         .dark-mode .current-time {
@@ -542,20 +542,20 @@
             color: #b0b0b0;
         }
 
-        .record-status {
+        .record-approval {
             font-size: 0.8rem;
             font-weight: 500;
         }
 
-        .present {
+        .approved {
             color: var(--bright-green);
         }
 
-        .absent {
+        .rejected {
             color: var(--danger);
         }
 
-        .half-day {
+        .pending {
             color: var(--bright-orange);
         }
 
@@ -880,7 +880,7 @@
         let employeeData = {
             shiftStart: '10:00',
             shiftEnd: '19:00',
-            status: 'ready', // ready, working, completed
+            status: 'ready', // ready, working, completed, pending, rejected
             isNewEmployee: false
         };
 
@@ -923,7 +923,7 @@
                 throw new Error('Invalid Employee ID format');
             }
             try {
-                const response = await fetch('http://13.60.236.63:3427/api/auth/validate', {
+                const response = await fetch('http://13.49.44.9:3427/api/auth/validate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId })
@@ -943,7 +943,7 @@
 
         async function fetchAttendanceRecords(empId, date) {
             try {
-                const response = await fetch(`http://13.60.236.63:3427/api/attendance/${empId}${date ? `?date=${date}` : ''}`);
+                const response = await fetch(`http://13.49.44.9:3427/api/attendance/${empId}${date ? `?date=${date}` : ''}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch attendance records');
                 return date ? data.filter(record => {
@@ -967,19 +967,8 @@
             const date = new Date(isoString);
             return {
                 time: date.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase(),
-                date: date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+                date: date.toLocaleDateString('en-IN', { day: 'numeric', month: 'numeric', year: 'numeric' })
             };
-        }
-
-        // Calculate attendance status
-        function calculateAttendanceStatus(punchIn, punchOut) {
-            if (!punchIn || !punchOut) return 'Absent';
-            const inTime = new Date(punchIn);
-            const outTime = new Date(punchOut);
-            const hours = (outTime - inTime) / (1000 * 60 * 60);
-            if (hours < 4) return 'Absent';
-            if (hours >= 4 && hours < 8) return 'Half-day';
-            return 'Present';
         }
 
         // Render punch history
@@ -992,7 +981,6 @@
             historyList.innerHTML = punchRecords.map(record => {
                 const punchIn = formatDateTime(record.punch_in);
                 const punchOut = formatDateTime(record.punch_out);
-                const status = record.status === 'not-defined' ? 'Absent' : calculateAttendanceStatus(record.punch_in, record.punch_out);
                 return `
                     <div class="record-item">
                         <div>
@@ -1005,7 +993,7 @@
                             <span class="record-time">${record.status === 'not-defined' ? 'Auto-Punched Out' : punchOut.time}</span>
                             <div class="record-date">${punchOut.date}</div>
                         </div>
-                        <div class="record-status ${status.toLowerCase().replace(' ', '-')}">${status}</div>
+                        <div class="record-approval ${record.hr_approval.toLowerCase()}">${record.hr_approval}</div>
                     </div>
                 `;
             }).join('');
@@ -1038,7 +1026,7 @@
         // Record punch in
         async function recordPunchIn(empId) {
             try {
-                const response = await fetch('http://13.60.236.63:3427/api/attendance/punch-in', {
+                const response = await fetch('http://13.49.44.9:3427/api/attendance/punch-in', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId })
@@ -1048,7 +1036,7 @@
                     if (data.alreadyPunchedIn) {
                         showToast('You are already punched in', 'info');
                         renderPunchOutAction(data.record.punch_in, empId);
-                        employeeData.status = 'working';
+                        employeeData.status = data.record.hr_approval === 'rejected' ? 'rejected' : data.record.hr_approval === 'approved' ? 'completed' : 'pending';
                         updateStatusIndicator();
                         return;
                     }
@@ -1057,7 +1045,7 @@
                 showToast(data.message, 'success');
                 punchRecords = await fetchAttendanceRecords(empId, selectedDate);
                 renderPunchOutAction(data.record.punch_in, empId);
-                employeeData.status = 'working';
+                employeeData.status = data.record.hr_approval === 'rejected' ? 'rejected' : data.record.hr_approval === 'approved' ? 'completed' : 'pending';
                 updateStatusIndicator();
                 renderPunchHistory();
             } catch (err) {
@@ -1068,7 +1056,7 @@
         // Record punch out
         async function recordPunchOut(empId) {
             try {
-                const response = await fetch('http://13.60.236.63:3427/api/attendance/punch-out', {
+                const response = await fetch('http://13.49.44.9:3427/api/attendance/punch-out', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ empId })
@@ -1078,7 +1066,7 @@
                 showToast(data.message, 'success');
                 punchRecords = await fetchAttendanceRecords(empId, selectedDate);
                 renderCompletedStatus(new Date(data.record.punch_out), 0);
-                employeeData.status = 'completed';
+                employeeData.status = data.record.hr_approval === 'rejected' ? 'rejected' : data.record.hr_approval === 'approved' ? 'completed' : 'pending';
                 updateStatusIndicator();
                 renderPunchHistory();
             } catch (err) {
@@ -1132,7 +1120,7 @@
                 } else {
                     const lastPunch = punchRecords[0];
                     if (lastPunch.punch_out === null && lastPunch.status !== 'not-defined') {
-                        employeeData.status = 'working';
+                        employeeData.status = lastPunch.hr_approval === 'rejected' ? 'rejected' : lastPunch.hr_approval === 'approved' ? 'completed' : 'pending';
                         showToast('You are already punched in', 'info');
                         renderPunchOutAction(lastPunch.punch_in, empId);
                     } else {
@@ -1143,7 +1131,7 @@
                             employeeData.status = 'ready';
                             renderPunchInAction();
                         } else {
-                            employeeData.status = 'completed';
+                            employeeData.status = lastPunch.hr_approval === 'rejected' ? 'rejected' : lastPunch.hr_approval === 'approved' ? 'completed' : 'pending';
                             renderCompletedStatus(lastPunchTime, hoursSinceLastPunch);
                         }
                     }
@@ -1172,7 +1160,15 @@
                     break;
                 case 'completed':
                     statusDot.className = 'status-dot completed';
-                    statusText.textContent = 'Completed - Attendance recorded';
+                    statusText.textContent = 'Completed - Attendance approved';
+                    break;
+                case 'pending':
+                    statusDot.className = 'status-dot pending';
+                    statusText.textContent = 'Pending - Awaiting HR approval';
+                    break;
+                case 'rejected':
+                    statusDot.className = 'status-dot rejected';
+                    statusText.textContent = 'Rejected - Attendance rejected by HR';
                     break;
                 default:
                     statusDot.className = 'status-dot inactive';
@@ -1228,7 +1224,7 @@
                     currentEmpId = empId;
                     employeeData.isNewEmployee = validation.isNewEmployee;
                     const message = validation.isNewEmployee
-                        ? 'Are you a new employee? Punch in to start.'
+                        ? 'Are you a new employee? Punch in to start, pending HR approval.'
                         : 'Are you sure you want to punch in and start your workday?';
                     showConfirmationModal('Confirm Punch In', message, () => recordPunchIn(empId));
                 } catch (err) {
@@ -1258,7 +1254,7 @@
                         <button type="submit" class="action-button" id="punchOutButton">
                             <i class="fas fa-fingerprint"></i> Punch Out
                         </button>
-                        <p class="shift-info">You've been working since ${punchInDate.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()} on ${punchInDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        <p class="shift-info">You've been working since ${punchInDate.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()} ${employeeData.isNewEmployee ? '(Pending HR approval)' : ''}</p>
                     </form>
                 </div>
             `;
@@ -1275,14 +1271,15 @@
                     await validateCredentials(empId);
                     showConfirmationModal(
                         'Confirm Punch Out',
-                        'Are you sure you want to punch out and end your workday?',
+                        `Are you sure you want to punch out and end your workday? ${employeeData.isNewEmployee ? 'This is pending HR approval.' : ''}`,
                         () => recordPunchOut(empId));
-                } catch (err) {
-                    showToast(`Error: ${err.message}`, 'error');
-                } finally {
-                    isSubmitting = false;
+                    } catch (err) {
+                        showToast(`Error: ${err.message}`, 'error');
+                    } finally {
+                        isSubmitting = false;
+                    }
                 }
-            });
+            );
         }
 
         // Render completed status
@@ -1290,7 +1287,7 @@
             const nextPunchTime = new Date(lastPunchTime);
             nextPunchTime.setHours(nextPunchTime.getHours() + 8);
             const hoursRemaining = (8 - hoursSinceLastPunch).toFixed(1);
-            const punchOut = formatDateTime(lastPunchTime);
+            const punchIn = formatDateTime(lastPunchTime);
             actionContainer.innerHTML = `
                 <div class="action-card">
                     <h3 class="action-title">Start Your Workday</h3>
@@ -1307,26 +1304,25 @@
                         <button type="submit" class="action-button disabled">
                             <i class="fas fa-fingerprint"></i> Punch In
                         </button>
-                        <p class="shift-info">Your shift timing is 10:00 AM - 7:00 PM</p>
+                        <p class="shift-info">Your shift timing is 10:00 AM - 7:00 PM ${employeeData.isNewEmployee ? '(Pending HR approval)' : ''}</p>
                     </form>
                 </div>
                 <div class="attendance-completed">
                     <div class="completed-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h3 class="completed-text">Attendance Completed</h3>
+                    <h3 class="completed-text">${employeeData.status === 'rejected' ? 'Attendance Rejected' : employeeData.isNewEmployee || employeeData.status === 'pending' ? 'Pending HR Approval' : 'Attendance Completed'}</h3>
                     <div class="completed-details">
                         <div class="completed-detail">
                             <div class="detail-label">Punch Out Time</div>
-                            <div class="detail-value">${punchOut.time}</div>
-                            <div class="detail-label">${punchOut.date}</div>
+                            <div class="detail-value">${punchIn.time}</div>
                         </div>
                         <div class="completed-detail">
                             <div class="detail-label">Next Punch In</div>
-                            <div class="detail-value">${hoursRemaining > 0 ? `After ${hoursRemaining} hours` : 'Now'}</div>
+                           <div class="detail-value">${hoursRemaining > 0 ? `After ${hoursRemaining} hours` : 'Now'}</div>
                         </div>
                     </div>
-                    <p class="completed-subtext">You have completed your workday. You can punch in again after the cooldown period.</p>
+                    <p class="completed-subtext">${employeeData.status === 'rejected' ? 'Your attendance was rejected by HR. Please contact HR for details.' : employeeData.isNewEmployee || employeeData.status === 'pending' ? 'Your attendance is awaiting HR approval.' : 'You have completed your workday. You can punch in again after the cooldown period.'}</p>
                 </div>
             `;
 
